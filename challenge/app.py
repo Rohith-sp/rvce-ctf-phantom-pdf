@@ -98,8 +98,12 @@ def search():
     try:
         cursor.execute(query)
         results = cursor.fetchall()
-        if any(row['access_level'] in ['Confidential', 'Restricted'] for row in results):
-            session['sqli_unlocked_vault'] = True
+        # Track exact document paths returned by user's SQL query
+        unlocked = session.get('unlocked_docs', ['/download/1', '/download/2'])
+        for row in results:
+            if row.get('file_path') and row['file_path'] not in unlocked:
+                unlocked.append(row['file_path'])
+        session['unlocked_docs'] = unlocked
     except Exception as e:
         results = [{"title": "Database Error", "access_level": "Error", "file_path": "#", "author": str(e)}]
         
@@ -110,9 +114,10 @@ def download_gate(doc_id):
     if doc_id not in SECURITY_QUESTIONS:
         abort(404)
         
-    # Prevent IDOR guessing: require SQLi discovery before accessing non-public document gates
-    if doc_id > 2 and not session.get('sqli_unlocked_vault'):
-        return render_template('gate.html', doc={"title": "Security Gate Locked", "file": f"/download/{doc_id}", "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Direct URL enumeration blocked! Confidential document gate IDs must be unlocked via SQL database querying.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
+    # Prevent IDOR guessing: require specific document ID to be revealed via SQL results
+    unlocked = session.get('unlocked_docs', ['/download/1', '/download/2'])
+    if f"/download/{doc_id}" not in unlocked:
+        return render_template('gate.html', doc={"title": "Security Gate Locked", "file": f"/download/{doc_id}", "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Direct URL enumeration blocked! This specific document ID must be revealed in your SQL query results before access is permitted.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
         
     doc = SECURITY_QUESTIONS[doc_id]
     error = None
@@ -134,8 +139,9 @@ def secure_fetch(doc_id):
     if doc_id not in SECURITY_QUESTIONS:
         abort(404)
         
-    if doc_id > 2 and not session.get('sqli_unlocked_vault'):
-        return render_template('gate.html', doc={"title": "Security Gate Locked", "file": f"/secure_fetch/{doc_id}", "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Direct URL enumeration blocked! Confidential document gate IDs must be unlocked via SQL database querying.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
+    unlocked = session.get('unlocked_docs', ['/download/1', '/download/2'])
+    if f"/download/{doc_id}" not in unlocked:
+        return render_template('gate.html', doc={"title": "Security Gate Locked", "file": f"/secure_fetch/{doc_id}", "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Direct URL enumeration blocked! This specific document ID must be revealed in your SQL query results before access is permitted.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
         
     # Verify player passed the security gate challenge for this specific document
     if not session.get(f'auth_doc_{doc_id}'):
