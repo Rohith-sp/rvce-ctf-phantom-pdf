@@ -20,7 +20,7 @@ BT
 (CONFIDENTIAL INTERNAL AUDIT MEMO) Tj
 0 -30 Td
 /F1 12 Tf
-(Author: Dr. Arthur Pendelton [EMP-8492]) Tj
+(Author: Dr. Arthur Pendelton) Tj
 0 -25 Td
 (Subject: Security Vault Passphrase & Encryption Audit) Tj
 0 -20 Td
@@ -40,7 +40,7 @@ endobj
 6 0 obj
 <<
   /Title (CONFIDENTIAL INTERNAL AUDIT MEMO)
-  /Author (Dr. Arthur Pendelton [EMP-8492])
+  /Author (Dr. Arthur Pendelton)
   /Subject ([Vault Protocol: VANGUARD-8492 Verified] -> ROT13 Cipher: eiprpgs{ha10a_fdyv_g0_e0g13_cqs_z3g4q4g4})
   /Keywords (Encrypted Decoy Video Payload (Base64): aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
   /Producer (RVCE Cyber Labs Vault System)

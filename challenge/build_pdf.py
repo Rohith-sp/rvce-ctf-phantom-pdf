@@ -99,7 +99,7 @@ def create_all_pdfs():
     osint_key = "VANGUARD-8492"
     flag = "rvcectf{un10n_sqli_t0_r0t13_pdf_m3t4d4t4}"
     rot13_cipher = codecs.encode(flag, 'rot_13')
-    make_pdf("confidential_memo.pdf", "CONFIDENTIAL INTERNAL AUDIT MEMO", "Dr. Arthur Pendelton [EMP-8492]", [
+    make_pdf("confidential_memo.pdf", "CONFIDENTIAL INTERNAL AUDIT MEMO", "Dr. Arthur Pendelton", [
         "Subject: Security Vault Passphrase & Encryption Audit",
         "",
         "Unseen upon the printed page,",

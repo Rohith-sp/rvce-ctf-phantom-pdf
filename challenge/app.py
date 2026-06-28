@@ -50,7 +50,7 @@ def init_db():
             ("Public Welcome Guide & Policies", "Public", "/download/2", "Admin"),
             ("Q3 Network Infrastructure Topology", "Confidential", "/download/3", "Alice Smith"),
             ("Database Cache Replication Logs", "Confidential", "/download/4", "David Kim"),
-            ("Internal Security Architecture Review", "Confidential", "/download/5", "Dr. Arthur Pendelton (EMP-8492)"),
+            ("Internal Security Architecture Review", "Confidential", "/download/5", "Dr. Arthur Pendelton"),
             ("Threat Vector Analysis Report", "Restricted", "/download/6", "Elena Rostova"),
             ("Executive Financial Audit Q2", "Restricted", "/download/7", "Samantha Vance")
         ]

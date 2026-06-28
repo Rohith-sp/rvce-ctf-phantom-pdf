@@ -24,29 +24,23 @@ def solve():
         return False
     print("[+] Success! Leaked entire vault containing 7 public, confidential, and restricted documents!")
     
-    # Identify target author employee ID from Arthur Pendelton's record
-    target_empid_match = re.search(r"EMP-([0-9]+)", html)
-    if not target_empid_match:
-        print("[-] Failed to find Target Employee ID in leaked document records!")
-        return False
-    target_empid = target_empid_match.group(1)
-    print(f"[+] Identified Target Author Employee ID: EMP-{target_empid}")
-    
     print("[+] Step 3: Conducting OSINT Recon on Team Directory...")
     res_team = client.get("/team")
     team_html = res_team.data.decode('utf-8')
     
-    # Locate Arthur Pendelton's Project Codename
+    # Locate Arthur Pendelton's card to find his EMP-ID and Project Codename
     member_cards = team_html.split('<div class="card">')
     target_card = None
     for card in member_cards:
-        if f"EMP-{target_empid}" in card:
+        if "Arthur Pendelton" in card:
             target_card = card
             break
             
+    empid_match = re.search(r"EMP-([0-9]+)", target_card)
+    target_empid = empid_match.group(1)
     project_match = re.search(r"Project ([A-Z0-9-]+)\.", target_card)
     osint_key = f"{project_match.group(1)}-{target_empid}"
-    print(f"[+] Verified OSINT passphrase / project clearance: {osint_key}")
+    print(f"[+] Identified Lead Cryptographer: EMP-{target_empid} | Project: {osint_key}")
     
     print("[+] Step 4: Bypassing Security Challenge Question Gate (/download/5)...")
     # Arthur's document is ID 5. Question: Which Linux command is used to change file permissions? Ans: chmod
