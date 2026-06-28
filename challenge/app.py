@@ -20,6 +20,10 @@ SECURITY_QUESTIONS = {
 
 @app.before_request
 def block_unauthorized_shortcuts():
+    # Allow keep-alive cron monitors (cron-job.org, UptimeRobot, /ping endpoint) to bypass bot blocking
+    if request.path == '/ping' or any(monitor in request.headers.get('User-Agent', '').lower() for monitor in ['cron-job', 'uptimerobot']):
+        return None
+
     # Anti-Bot Protection: Block automated scraping bots and common scanner User-Agents
     ua = request.headers.get('User-Agent', '').lower()
     bot_signatures = ['curl', 'wget', 'python-requests', 'scrapy', 'sqlmap', 'nikto', 'burp', 'nmap', 'crawler', 'spider', 'bot', 'go-http-client', 'java/']
@@ -168,6 +172,10 @@ def team():
         {"name": "Samantha Vance", "empid": "EMP-9104", "role": "IT Procurement Director", "department": "Infrastructure Finance", "bio": "Managing quarterly cloud hosting budgets, hardware server upgrades, and laboratory vendor compliance audits."}
     ]
     return render_template('team.html', members=members)
+
+@app.route('/ping')
+def ping_monitor():
+    return "OK", 200
 
 @app.errorhandler(404)
 def unauthorized_or_missing_page(e):
