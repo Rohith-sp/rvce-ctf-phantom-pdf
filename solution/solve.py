@@ -56,18 +56,22 @@ def solve():
     pdf_bytes = res_pdf.data
     print(f"[+] Downloaded confidential_memo.pdf ({len(pdf_bytes)} bytes)!")
         
-    # Search for ROT13 Cipher inside Document Properties Subject field
-    cipher_match = re.search(rb"ROT13 Cipher:\s*([a-zA-Z0-9_{}-]+)", pdf_bytes)
-    if not cipher_match:
-        print("[-] ROT13 Cipher not found in PDF metadata properties!")
+    # Search for Encrypted Verification Token inside Document Properties Subject field
+    hex_match = re.search(rb"Encrypted Verification Token:\s*([0-9a-fA-F]+)", pdf_bytes)
+    if not hex_match:
+        print("[-] Encrypted Verification Token not found in PDF metadata properties!")
         return False
         
-    rot13_cipher = cipher_match.group(1).decode('ascii')
-    print(f"[+] Found ROT13 Encrypted Cipher in Subject: {rot13_cipher}")
+    hex_token = hex_match.group(1).decode('ascii')
+    print(f"[+] Found Encrypted Verification Token in Subject: {hex_token}")
     
-    print("[+] Step 6: Decrypting ROT13 Cipher ('thirteen steps to secrets keep')...")
+    print("[+] Step 6: Decrypting Multi-Layer Cipher (Hex Decode -> XOR with OSINT Key -> ROT13)...")
+    raw_xored = bytes.fromhex(hex_token)
+    rot13_cipher = ''.join([chr(b ^ ord(osint_key[i % len(osint_key)])) for i, b in enumerate(raw_xored)])
+    print(f"[+] After XOR with Project Code '{osint_key}': {rot13_cipher}")
+    
     flag_str = codecs.decode(rot13_cipher, 'rot_13')
-    print(f"[+] Decrypted string content: {flag_str}")
+    print(f"[+] After ROT13 Decryption: {flag_str}")
     
     if "rvcectf{" in flag_str:
         print(f"\n[*] CHALLENGE VERIFIED SOLVED! True Flag retrieved: {flag_str}")

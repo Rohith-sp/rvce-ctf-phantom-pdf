@@ -1,64 +1,96 @@
-# Solution Writeup: Operation Phantom PDF
+# RVCE CTF: Operation Phantom PDF 🕵️‍♂️📑
 
-## Overview & Architecture
-This challenge combines **Medium-Hard Web Exploitation (UNION SQLi + Security Gate Bypass)**, **OSINT Reconnaissance across Decoys**, and **Poetic PDF Metadata Forensics (ROT13)**. Additionally, the challenge includes **AI Agent Traps** designed to mislead automated LLM solvers or naive grep scripts.
+**Category**: Web Exploitation, OSINT, Digital Forensics, Cryptography  
+**Difficulty**: Medium-Hard  
+**Author**: RVCE Cyber Labs / Security Research Team  
 
 ---
 
-## Step-by-Step Walkthrough
+## 📖 Challenge Scenario
+RVCE Cyber Labs has launched their new enterprise internal document portal: **Operation Phantom PDF**. The platform boasts advanced Web Application Firewalls (WAF), session-enforced access gates, and automated metadata encryption protocols. 
 
-### 1. Web Exploitation (UNION SELECT SQLi Evasion)
-Accessing the document portal at `/`, we observe a search input that queries public documents.
-The endpoint enforces a custom WAF blocking common keywords (`--`, `#`, `/*`, `=`, `1=1`, `or`).
-To bypass the WAF and leak confidential records without using equal signs or comments, we craft a 4-column `UNION SELECT` payload using `LIKE`:
-```sql
-%' UNION SELECT title, access_level, file_path, author FROM documents WHERE access_level LIKE '%
-```
-Submitting this via POST leaks the entire enterprise vault consisting of **7 distinct documents** (Public, Confidential, and Restricted). Because there are multiple confidential documents (network diagrams, database logs, security reviews), players must determine which one holds the actual flag.
+Rumor has it that **Dr. Arthur Pendelton**, the Lead Cryptographer, has hidden the master cryptographic flag inside his internal security memo. However, to deter adversaries, the portal is littered with decoy documents, fake system flags, rabbit-hole image schematics, and honeypot Base64 media mirrors. Your mission is to infiltrate the vault, bypass access gates, uncover the true cryptographic key, and decrypt the multi-layered cipher.
 
-### 2. OSINT Reconnaissance (Filtering Decoys)
-Navigating to `/team` (Team Directory), we observe the division roster and a global security policy stating that personnel access protocols follow `[ProjectCode]-[EmployeeID]`.
-Reading the staff bios reveals that **Dr. Arthur Pendelton (`EMP-8492`)** is the Lead Security Architect handling enterprise vault cryptography. His project codename is `VANGUARD`.
-Matching this back to our SQL injection query results, we locate Arthur's specific document: **"Internal Security Architecture Review"** (`/download/5`).
+---
 
-### 3. Security Password Gate Bypass & Decoy Traps
-Clicking download on `/download/5` presents a **Security Access Control Challenge** asking:
+## 🎯 Intended Solution Walkthrough
+
+### Step 1: Web Exploitation (Leaking the Vault via UNION SQLi)
+Navigating to the main search portal (`/search`), the application filters documents by keyword. However, the search query parameter (`q`) is vulnerable to SQL Injection.
+
+The backend implements a relaxed WAF blocking destructive SQL queries (`drop`, `delete`, `update`, `insert`), but allows diverse `UNION SELECT` extraction methods. Since the default query restricts output to `access_level = 'Public'`, an attacker can dump the entire document table (which contains exactly 4 columns: `title, access_level, file_path, author`) using any of the following payloads:
+
+* **Method 1 (Wildcard Extraction)**:
+  ```sql
+  %' UNION SELECT * FROM documents --
+  ```
+* **Method 2 (Column Filtering)**:
+  ```sql
+  %' UNION SELECT title, access_level, file_path, author FROM documents WHERE access_level!='Public' --
+  ```
+
+Submitting either payload reveals all **7 documents** (Public, Confidential, and Restricted). Notice that multiple documents contain subtle traps!
+
+---
+
+### Step 2: Dodging Decoy Flags & Rabbit Holes 🕳️
+If a player hastily explores the leaked documents, they will encounter several convincing traps:
+1. **Visual Image Trap**: Alice Smith's network topology document (`topology_q3.pdf`) references a schematic image at `/static/system_blueprint.png`. Inspecting this image's metadata reveals `Token: rvcectf{v1su4l_st3g0_d3c0y_tr4p}`. Submitting this flag fails!
+2. **Database Log Trap**: David Kim's replication log (`db_logs.pdf`) contains the metadata property `Subject: Sync Heartbeat Key: rvcectf{sql1t3_c4ch3_r3pl1c4t10n_k3y}`. This is another honeypot!
+3. **Threat Report Trap**: Elena Rostova's report (`threat_report.pdf`) prints `"Captured C2 Malware Beacon Signature: rvcectf{m4lw4r3_b34c0n_s1gn4tur3_q3}"` directly on the page. Fake!
+4. **Financial Audit Trap**: Samantha Vance's audit (`finance_q2.pdf`) embeds `Subject: Fiscal Voucher Code: rvcectf{f1n4nc14l_v0uch3r_4ud1t}`. Fake!
+5. **Base64 Media Mirrors**: All PDFs contain metadata keywords like `Visual Reference Stream: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN`. Decoding this Base64 string leads to a YouTube video decoy!
+
+---
+
+### Step 3: OSINT Reconnaissance on Team Directory
+To find the authentic flag, players must investigate the **Security Research Team** (`/team`). 
+A security policy banner notes: *"...internal vault access tokens are formulated using the standardized `[ProjectCode]-[EmployeeID]` convention."*
+
+Scanning the staff roster identifies **Dr. Arthur Pendelton (`EMP-8492`)**:
+> *"Spearheading enterprise vault cryptography and automated metadata audit verification. Principal investigator for Project VANGUARD."*
+
+Combining his project code and employee ID gives Arthur's master clearance key: **`VANGUARD-8492`**.
+
+---
+
+### Step 4: Bypassing the Security Gate & Shortcut Firewall
+Returning to the SQL injection results, locate Arthur's document: **Internal Security Architecture Review** (`/download/5`).
+
+*(Note: The server enforces strict session tokens. Attempting to access `/secure_fetch/5` directly or fuzzing static PDF paths triggers an alarm (`wrong.mp3`), logs a security breach, and forcibly redirects the user back to the home portal!)*
+
+Clicking download opens the access gate presenting Arthur's general knowledge challenge:
 > *Which Linux command is used to change file or directory permissions?*
 
-Answering **`chmod`** triggers a celebratory success audio chime (`success.mp3`) and downloads `confidential_memo.pdf`. 
-*(Note: Entering an incorrect answer triggers an alarm chime (`wrong.mp3`), displays an Unauthorized Access Alert, and redirects players back to the home portal after 3 seconds).*
-
-> **Base64 Decoy Traps**: Across the various decoy PDFs, players inspecting strings or metadata will find base64 encoded strings (e.g., `aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1DeDZmUGlEMy12SQ==`). Decoding these reveals YouTube video links designed to waste time and mislead scrapers.
-
-### 4. PDF Verse & Metadata Forensics
-Opening `confidential_memo.pdf` displays a poetic verse written on the memo:
-```text
-Unseen upon the printed page,
-I hold the tale of birth and age.
-Find the Subject in my Properties deep,
-Then spin it thirteen steps to secrets keep.
-```
-This verse instructs the player to inspect the document's unseen metadata properties (specifically the **Subject** field) and spin it **thirteen steps** (ROT13).
-
-Opening Document Properties in any PDF viewer (or running `strings confidential_memo.pdf` / `exiftool`) reveals the Subject attribute:
-```text
-Subject: [Vault Protocol: VANGUARD-8492 Verified] -> ROT13 Cipher: eiprpgs{ha10a_fdyv_g0_e0g13_cqs_z3g4q4g4}
-```
-Notice that the metadata verifies our OSINT key `VANGUARD-8492` and provides the ROT13 encoded string.
-
-### 5. ROT13 Decryption & Flag Extraction
-Taking the ROT13 cipher string `eiprpgs{ha10a_fdyv_g0_e0g13_cqs_z3g4q4g4}` and rotating each letter by 13 positions (via CyberChef, rot13.com, or Python) decodes the true flag:
-
-**`rvcectf{un10n_sqli_t0_r0t13_pdf_m3t4d4t4}`**
+Answering **`chmod`** plays the celebratory **`success.mp3`** chime, authorizes the session, and downloads `confidential_memo.pdf`.
 
 ---
 
-## Verification
-Run the automated deterministic solver:
+### Step 5: Forensics & Multi-Layer Decryption
+Opening `confidential_memo.pdf` reveals Arthur's poetic riddle:
+> *"Unseen upon the printed page, I hold the tale of birth and age. Find the Subject hex in Properties deep, XOR with my Project Code, then thirteen steps to secrets keep."*
+
+Inspecting the PDF Document Properties (`Ctrl + D` or `pypdf`) reveals the Subject field:
+```text
+Encrypted Verification Token: 33283e352526213f455905095309272a3e231e35747253045c6d33712976661e28774a0c450d55623c
+```
+
+Following the poem's instructions:
+1. **Hex Decode**: Convert the hex string into raw encrypted bytes.
+2. **XOR Decryption**: XOR each byte against Arthur's OSINT clearance key (**`VANGUARD-8492`**). This yields intermediate string: `eiprpgs{ha10a_fdyv_g0_k0e_e0g13_z3g4q4g4}`.
+3. **ROT13 Spin**: Rotating 13 positions ("thirteen steps to secrets keep") reveals the final, true master flag!
+
+---
+
+## 🏁 True Winning Flag
+```text
+rvcectf{un10n_sqli_t0_x0r_r0t13_m3t4d4t4}
+```
+
+---
+
+## 💻 Automated Verification Script
+Run the automated solver script to verify the entire exploitation chain:
 ```bash
 python solution/solve.py
-```
-**Output**:
-```text
-[*] CHALLENGE VERIFIED SOLVED! True Flag retrieved: rvcectf{un10n_sqli_t0_r0t13_pdf_m3t4d4t4}
 ```

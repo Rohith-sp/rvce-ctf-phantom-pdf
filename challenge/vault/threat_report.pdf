@@ -26,7 +26,7 @@ BT
 0 -20 Td
 (Recommended action: enforce strict WAF filtering on query parameters.) Tj
 0 -20 Td
-(Captured perimeter telemetry logged securely.) Tj
+(Captured C2 Malware Beacon Signature: rvcectf{m4lw4r3_b34c0n_s1gn4tur3_q3}) Tj
 0 -20 Td
 ET
 endstream
@@ -35,8 +35,8 @@ endobj
 <<
   /Title (Threat Vector Analysis Report)
   /Author (Elena Rostova)
-  /Subject (Threat Report Q3)
-  /Keywords (C2 Link: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
+  /Subject (Threat Analysis Q3)
+  /Keywords (Captured Telemetry Log: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
   /Producer (RVCE Cyber Labs Vault System)
 >>
 endobj

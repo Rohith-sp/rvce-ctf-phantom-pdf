@@ -26,7 +26,7 @@ BT
 0 -20 Td
 (Internal router gateways are restricted to IP 10.0.4.1.) Tj
 0 -20 Td
-(Network diagram camera monitoring feed active.) Tj
+(Refer to schematic diagram hosted at /static/system_blueprint.png for perimeter gateways.) Tj
 0 -20 Td
 ET
 endstream
@@ -35,8 +35,8 @@ endobj
 <<
   /Title (Q3 Network Infrastructure Topology)
   /Author (Alice Smith)
-  /Subject (Network Diagram Decoy)
-  /Keywords (Stream Link: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
+  /Subject (Network Diagram Specification)
+  /Keywords (Network Telemetry Stream: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
   /Producer (RVCE Cyber Labs Vault System)
 >>
 endobj

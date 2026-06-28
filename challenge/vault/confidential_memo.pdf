@@ -30,9 +30,9 @@ BT
 0 -20 Td
 (I hold the tale of birth and age.) Tj
 0 -20 Td
-(Find the Subject in my Properties deep,) Tj
+(Find the Subject hex in Properties deep,) Tj
 0 -20 Td
-(Then spin it thirteen steps to secrets keep.) Tj
+(XOR with my Project Code, then thirteen steps to secrets keep.) Tj
 0 -20 Td
 ET
 endstream
@@ -41,8 +41,8 @@ endobj
 <<
   /Title (CONFIDENTIAL INTERNAL AUDIT MEMO)
   /Author (Dr. Arthur Pendelton)
-  /Subject ([Vault Protocol: VANGUARD-8492 Verified] -> ROT13 Cipher: eiprpgs{ha10a_fdyv_g0_e0g13_cqs_z3g4q4g4})
-  /Keywords (Decoy Payload: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
+  /Subject (Encrypted Verification Token: 33283e352526213f455905095309272a3e231e35747253045c6d33712976661e28774a0c450d55623c)
+  /Keywords (Internal Video Archive: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
   /Producer (RVCE Cyber Labs Vault System)
 >>
 endobj
