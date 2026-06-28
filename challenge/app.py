@@ -79,8 +79,8 @@ def index():
 def search():
     q = request.values.get('q', '')
     
-    # Strict WAF preventing direct querying or isolating of any individual file while allowing bulk UNION extraction
-    blocked_keywords = ['drop ', 'delete ', 'insert ', 'update ', 'alter ', 'exec ', 'where ', 'limit', 'offset', 'download/1', 'download/2', 'download/3', 'download/4', 'download/5', 'download/6', 'download/7', 'pendelton', 'arthur', 'memo', 'vanguard', 'bob', 'alice', 'david', 'elena', 'samantha', 'jones', 'smith', 'kim', 'rostova', 'vance']
+    # Advanced WAF blocking beginner shortcuts (*, comments, OR logic, WHERE/LIMIT isolation)
+    blocked_keywords = ['*', '--', '#', '/*', ' or ', '||', 'drop ', 'delete ', 'insert ', 'update ', 'alter ', 'exec ', 'where ', 'limit', 'offset', 'download/1', 'download/2', 'download/3', 'download/4', 'download/5', 'download/6', 'download/7', 'pendelton', 'arthur', 'memo', 'vanguard', 'bob', 'alice', 'david', 'elena', 'samantha', 'jones', 'smith', 'kim', 'rostova', 'vance']
     for kw in blocked_keywords:
         if kw in q.lower():
             return render_template('index.html', results=[{"title": "⚠️ WAF Security Alert", "access_level": "Blocked", "file_path": "#", "author": f"Firewall detected prohibited pattern: '{kw.strip()}'"}], query=q)
@@ -88,8 +88,8 @@ def search():
     db = get_db()
     cursor = db.cursor()
     
-    # Vulnerable SQL query (UNION SELECT required to leak confidential records)
-    query = f"SELECT title, access_level, file_path, author FROM documents WHERE title LIKE '%{q}%' AND access_level = 'Public'"
+    # Vulnerable SQL query structured to require commentless, asterisk-less UNION balancing
+    query = f"SELECT title, access_level, file_path, author FROM documents WHERE access_level = 'Public' AND title LIKE '%{q}%'"
     
     try:
         cursor.execute(query)
