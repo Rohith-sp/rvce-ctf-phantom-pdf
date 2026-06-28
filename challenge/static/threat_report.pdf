@@ -26,7 +26,7 @@ BT
 0 -20 Td
 (Recommended action: enforce strict WAF filtering on query parameters.) Tj
 0 -20 Td
-(Captured Malware C2 Server (Base64): aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN) Tj
+(Captured perimeter telemetry logged securely.) Tj
 0 -20 Td
 ET
 endstream
@@ -36,7 +36,7 @@ endobj
   /Title (Threat Vector Analysis Report)
   /Author (Elena Rostova)
   /Subject (Threat Report Q3)
-  /Keywords (C2: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
+  /Keywords (C2 Link: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
   /Producer (RVCE Cyber Labs Vault System)
 >>
 endobj

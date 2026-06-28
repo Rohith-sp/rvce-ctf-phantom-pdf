@@ -64,36 +64,36 @@ startxref
         f.write(pdf_content.encode('latin1', errors='ignore'))
 
 def create_all_pdfs():
-    # Single YouTube Link Base64 Decoy everywhere as requested
+    # Single YouTube Link Base64 Decoy hidden inside Keywords metadata only
     b64_yt = "aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN"
 
     # 1. Public Design Guidelines
     make_pdf("design_v2.pdf", "Frontend Design Guidelines v2.4", "Bob Jones", [
         "Standard UI/UX color palettes and typography rules.",
         "Ensure all components follow the Outfit font layout.",
-        f"Design Reference Video (Base64): {b64_yt}"
+        "Refer to portal documentation for visual guidelines."
     ], keywords_meta=f"Decoy Link: {b64_yt}")
     
     # 2. Public Welcome Guide
     make_pdf("welcome.pdf", "Public Welcome Guide & Policies", "Admin", [
         "Welcome to the RVCE Cyber Labs portal.",
         "Please follow standard security protocols when accessing files.",
-        f"Introductory Orientation Stream (Base64): {b64_yt}"
+        "Contact IT support for access permission inquiries."
     ], keywords_meta=f"Decoy Link: {b64_yt}")
 
     # 3. Decoy Confidential Topology
     make_pdf("topology_q3.pdf", "Q3 Network Infrastructure Topology", "Alice Smith", [
         "Subnet masks and firewall VLAN configurations for Q3.",
         "Internal router gateways are restricted to IP 10.0.4.1.",
-        f"Encrypted Network Camera Feed (Base64): {b64_yt}"
-    ], subject_meta="Network Diagram Decoy", keywords_meta=f"Stream: {b64_yt}")
+        "Network diagram camera monitoring feed active."
+    ], subject_meta="Network Diagram Decoy", keywords_meta=f"Stream Link: {b64_yt}")
 
     # 4. Decoy Confidential DB Logs
     make_pdf("db_logs.pdf", "Database Cache Replication Logs", "David Kim", [
         "Replication sync heartbeat active across all nodes.",
         "0 critical database synchronization errors detected.",
-        f"Backup Log Mirror URL (Base64): {b64_yt}"
-    ], subject_meta="DB Replication Logs", keywords_meta=f"Mirror: {b64_yt}")
+        "Backup log mirror synchronization verified."
+    ], subject_meta="DB Replication Logs", keywords_meta=f"Mirror Link: {b64_yt}")
 
     # 5. TRUE TARGET: Arthur's Confidential Memo
     osint_key = "VANGUARD-8492"
@@ -106,23 +106,23 @@ def create_all_pdfs():
         "I hold the tale of birth and age.",
         "Find the Subject in my Properties deep,",
         "Then spin it thirteen steps to secrets keep."
-    ], subject_meta=f"[Vault Protocol: {osint_key} Verified] -> ROT13 Cipher: {rot13_cipher}", keywords_meta=f"Encrypted Decoy Video Payload (Base64): {b64_yt}")
+    ], subject_meta=f"[Vault Protocol: {osint_key} Verified] -> ROT13 Cipher: {rot13_cipher}", keywords_meta=f"Decoy Payload: {b64_yt}")
 
     # 6. Decoy Restricted Threat Report
     make_pdf("threat_report.pdf", "Threat Vector Analysis Report", "Elena Rostova", [
         "Analysis of perimeter external attack vectors.",
         "Recommended action: enforce strict WAF filtering on query parameters.",
-        f"Captured Malware C2 Server (Base64): {b64_yt}"
-    ], subject_meta="Threat Report Q3", keywords_meta=f"C2: {b64_yt}")
+        "Captured perimeter telemetry logged securely."
+    ], subject_meta="Threat Report Q3", keywords_meta=f"C2 Link: {b64_yt}")
 
     # 7. Decoy Restricted Financial Audit
     make_pdf("finance_q2.pdf", "Executive Financial Audit Q2", "Samantha Vance", [
         "Quarterly lab server procurement expenditures.",
         "Cloud hosting budget allocated to Render and AWS infrastructure.",
-        f"Encrypted Financial Sheet (Base64): {b64_yt}"
-    ], subject_meta="Financial Audit", keywords_meta=f"Sheet: {b64_yt}")
+        "Quarterly fiscal balance approved."
+    ], subject_meta="Financial Audit", keywords_meta=f"Sheet Link: {b64_yt}")
 
-    print("[+] Successfully generated all 7 authentic vault PDFs with single Base64 YouTube decoy!")
+    print("[+] Successfully generated all 7 authentic vault PDFs with Base64 hidden safely in metadata!")
 
 if __name__ == "__main__":
     create_all_pdfs()

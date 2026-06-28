@@ -26,7 +26,7 @@ BT
 0 -20 Td
 (Internal router gateways are restricted to IP 10.0.4.1.) Tj
 0 -20 Td
-(Encrypted Network Camera Feed (Base64): aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN) Tj
+(Network diagram camera monitoring feed active.) Tj
 0 -20 Td
 ET
 endstream
@@ -36,7 +36,7 @@ endobj
   /Title (Q3 Network Infrastructure Topology)
   /Author (Alice Smith)
   /Subject (Network Diagram Decoy)
-  /Keywords (Stream: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
+  /Keywords (Stream Link: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
   /Producer (RVCE Cyber Labs Vault System)
 >>
 endobj
