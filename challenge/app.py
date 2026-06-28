@@ -56,7 +56,7 @@ def init_db():
             ('Bob Jones', 'EMP-3391', 'Lead UI/UX Designer', 'Frontend Engineering', 'Passionate about glassmorphism, micro-animations, and responsive accessibility. Spearheading design systems for Project ORION-404.'),
             ('Samantha Vance', 'EMP-6104', 'VP of Product Strategy', 'Executive Management', 'Coordinating cross-department milestones and client relations. Driving user engagement metrics across Europe and North America under Project HELIOS-881.'),
             ('David Kim', 'EMP-7728', 'Senior Database Engineer', 'Data Storage', 'Optimizing distributed SQL querying engines and high-availability caching. Managing storage protocols for Project CYBER-303.'),
-            ('Dr. Arthur Pendelton', 'EMP-8492', 'Lead Security Architect', 'Cyber Defense Labs', 'Specializes in document steganography, encrypted stream vaults, and zero-trust authentication. Leading research on Project VANGUARD. Reminder: division vault streaming protocols standardize keys as [ProjectCode]-[EmpID].'),
+            ('Dr. Arthur Pendelton', 'EMP-8492', 'Lead Security Architect', 'Cyber Defense Labs', 'Specializes in document steganography, encrypted stream vaults, and zero-trust authentication. Leading research on Project VANGUARD.'),
             ('Elena Rostova', 'EMP-9012', 'Threat Intelligence Analyst', 'Security Operations', 'Monitors AP threat vectors, network anomalies, and malware heuristics. Coordinating defensive counter-measures for Project NEXUS-550.')
         ]
         
