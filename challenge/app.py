@@ -44,7 +44,6 @@ def init_db():
         cursor.execute('DROP TABLE IF EXISTS documents')
         cursor.execute('''
             CREATE TABLE documents (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT,
                 access_level TEXT,
                 file_path TEXT,
@@ -74,8 +73,8 @@ def index():
 def search():
     q = request.values.get('q', '')
     
-    # Strict WAF Filter (Blocks comments, equality, OR boolean logic, forcing clean UNION SELECT)
-    blocked_keywords = ['--', '#', '/*', '=', '1=1', 'true', ' or ', '||', 'union all']
+    # Relaxed WAF Filter allowing flexible UNION SELECT variations (*, comments, WHERE filtering)
+    blocked_keywords = ['drop ', 'delete ', 'insert ', 'update ', 'alter ', 'exec ']
     for kw in blocked_keywords:
         if kw in q.lower():
             return render_template('index.html', results=[{"title": "⚠️ WAF Security Alert", "access_level": "Blocked", "file_path": "#", "author": f"Firewall detected prohibited pattern: '{kw.strip()}'"}], query=q)
