@@ -120,7 +120,7 @@ def search():
         # Track exact document paths returned by user's SQL query
         unlocked = session.get('unlocked_docs', ['/download/1', '/download/2'])
         for row in results:
-            if row.get('file_path') and row['file_path'] not in unlocked:
+            if 'file_path' in row.keys() and row['file_path'] and row['file_path'] not in unlocked:
                 unlocked.append(row['file_path'])
         session['unlocked_docs'] = unlocked
     except Exception as e:
