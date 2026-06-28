@@ -18,15 +18,15 @@ Rumor has it that **Dr. Arthur Pendelton**, the Lead Cryptographer, has hidden t
 ### Step 1: Web Exploitation (Leaking the Vault via UNION SQLi)
 Navigating to the main search portal (`/search`), the application filters documents by keyword. However, the search query parameter (`q`) is vulnerable to SQL Injection.
 
-The backend implements a relaxed WAF blocking destructive SQL queries (`drop`, `delete`, `update`, `insert`), but allows diverse `UNION SELECT` extraction methods. Since the default query restricts output to `access_level = 'Public'`, an attacker can dump the entire document table (which contains exactly 4 columns: `title, access_level, file_path, author`) using any of the following payloads:
+The backend implements a WAF blocking wildcards (`*`), comments (`--`, `#`), and destructive SQL commands (`drop`, `delete`, `update`, `insert`). Because of this, players must write a comment-less, balanced `UNION SELECT` query. Since the default query restricts output to `access_level = 'Public'`, an attacker can dump the entire document table (which contains exactly 4 columns: `title, access_level, file_path, author`) using any of the following payloads:
 
-* **Method 1 (Wildcard Extraction)**:
+* **Method 1 (Full Vault Dump)**:
   ```sql
-  %' UNION SELECT * FROM documents --
+  %' UNION SELECT title, access_level, file_path, author FROM documents UNION SELECT '1','2','3','4
   ```
-* **Method 2 (Column Filtering)**:
+* **Method 2 (Filtered Decoy Dump)**:
   ```sql
-  %' UNION SELECT title, access_level, file_path, author FROM documents WHERE access_level!='Public' --
+  %' UNION SELECT title, access_level, file_path, author FROM documents WHERE access_level!='Public' UNION SELECT '1','2','3','4
   ```
 
 Submitting either payload reveals all **7 documents** (Public, Confidential, and Restricted). Notice that multiple documents contain subtle traps!
