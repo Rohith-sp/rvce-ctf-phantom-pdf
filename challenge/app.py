@@ -83,11 +83,11 @@ def search():
     if len(q.strip()) == 1:
         return render_template('gate.html', doc={"title": "WAF Security Alarm", "file": "#", "question": ""}, doc_id=0, error=f"UNAUTHORIZED ACCESS ALERT: Lazy single-letter search probe ('{q.strip()}') detected by firewall! Triggering security siren.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
     
-    # Advanced WAF blocking beginner shortcuts (*, comments, OR logic, WHERE/LIMIT isolation)
-    blocked_keywords = ['*', '--', '#', '/*', ' or ', '||', 'drop ', 'delete ', 'insert ', 'update ', 'alter ', 'exec ', 'where ', 'limit', 'offset', 'download/1', 'download/2', 'download/3', 'download/4', 'download/5', 'download/6', 'download/7', 'pendelton', 'arthur', 'memo', 'vanguard', 'bob', 'alice', 'david', 'elena', 'samantha', 'jones', 'smith', 'kim', 'rostova', 'vance', 'marcus', 'viktor', 'chloe', 'lucas', 'sophia', 'harrison', 'amara', 'sterling', 'reznov', 'bennett', 'thorne', 'wells', 'chen']
+    # Advanced WAF blocking beginner shortcuts (*, comments, OR logic) exactly aligning with the diagnostic hint
+    blocked_keywords = ['*', '--', '#', '/*', ' or ', '||', 'drop ', 'delete ', 'insert ', 'update ', 'alter ', 'exec ']
     for kw in blocked_keywords:
         if kw in q.lower():
-            return render_template('gate.html', doc={"title": "WAF Security Alarm", "file": "#", "question": ""}, doc_id=0, error=f"UNAUTHORIZED ACCESS ALERT: Simple/Beginner SQL Injection pattern ('{kw.strip()}') detected by firewall! Triggering security siren.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
+            return render_template('gate.html', doc={"title": "WAF Security Alarm", "file": "#", "question": ""}, doc_id=0, error=f"UNAUTHORIZED ACCESS ALERT: Forbidden pattern ('{kw.strip()}') detected by firewall! Triggering security siren.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
             
     db = get_db()
     cursor = db.cursor()
