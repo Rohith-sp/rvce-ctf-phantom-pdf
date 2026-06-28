@@ -69,13 +69,20 @@ def init_db():
 def index():
     return render_template('index.html', results=None)
 
-@app.route('/search')
+@app.route('/search', methods=['GET', 'POST'])
 def search():
-    q = request.args.get('q', '')
+    q = request.values.get('q', '')
+    
+    # Custom Medium-Hard WAF Filter (Blocks comments, equal signs, and naive payloads)
+    blocked_keywords = ['--', '#', '/*', '=', '1=1', 'true']
+    for kw in blocked_keywords:
+        if kw in q.lower():
+            return render_template('index.html', results=[{"title": "⚠️ WAF Security Alert", "access_level": "Blocked", "file_path": "#", "author": f"Firewall detected prohibited pattern: '{kw.strip()}'"}], query=q)
+            
     db = get_db()
     cursor = db.cursor()
     
-    # Vulnerable SQL query allowing SQL injection
+    # Vulnerable SQL query (Medium-Hard SQLi required to leak records)
     query = f"SELECT title, access_level, file_path, author FROM documents WHERE title LIKE '%{q}%' AND access_level = 'Public'"
     
     try:

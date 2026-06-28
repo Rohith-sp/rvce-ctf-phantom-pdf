@@ -163,7 +163,7 @@
     </div>
 
     <div class="container">
-        <form action="/search" method="get" class="search-box">
+        <form action="/search" method="post" class="search-box">
             <input type="text" name="q" placeholder="Search keywords (e.g. Topology, Guidelines)..." value="{{ query if query else '' }}">
             <button type="submit">Query Vault</button>
         </form>
