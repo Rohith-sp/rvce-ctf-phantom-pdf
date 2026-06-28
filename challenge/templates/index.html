@@ -198,12 +198,13 @@
     </div>
     <div id="waf-telemetry" data-status="locked"></div>
     <script>
-        var _0xe4 = "Rm91ciBwaWxsYXJzIHVwaG9sZCBvdXIgdGFibGUgcmVjb3Jkcy4gTGF6eSB3aWxkY2FyZHMgKCopIGFuZCB0cmFpbGluZyBzaWxlbnQgdHJ1bmNhdGlvbiAoLS0vIykgd2lsbCBzdW1tb24gdGhlIHNlY3VyaXR5IHNpcmVuLiBZb3UgbXVzdCBiYWxhbmNlIHlvdXIgaW5xdWlyeSBmcm9tIHN0YXJ0IHRvIGZpbmlzaC4=";
+        var _0x8f = [75, 123, 110, 80, 9, 64, 94, 82, 41, 45, 33, 41, 65, 29, 31, 30, 18, 232, 239, 178, 246, 213, 213, 142, 193, 221, 161, 166, 180, 248, 173, 131, 142, 155, 137, 102, 122, 62, 55, 82, 68, 86, 74, 26, 54, 33, 35, 50, 62, 5, 25, 22, 10, 160, 175, 164, 188, 188, 194, 196, 213, 152, 203, 180, 172, 189, 183, 139, 135, 151, 215, 141, 108, 96, 118, 116, 85, 8, 91, 68, 72, 42, 40, 51, 45, 9, 8, 0, 85, 84, 174, 167, 190, 187, 182, 134, 218, 221, 215, 174, 233, 163, 162, 179, 136, 131, 157, 218, 117, 96, 106, 54, 110, 65, 72, 71, 75, 41, 51, 55, 117, 47, 10, 24, 20, 22, 81, 166, 212, 251, 238, 130, 196, 197, 196, 202, 229, 174, 178, 182, 128, 134, 140, 147, 221, 125, 100, 103, 107, 0, 78, 64, 68, 73, 42, 56, 40, 120, 57, 20, 2, 25, 91, 241, 253, 241, 229, 234, 133, 216, 220, 154, 167, 161, 161, 191, 174, 140, 197];
         function unmaskWAF() {
             var el = document.getElementById('waf-telemetry');
             if(el && el.getAttribute("data-decrypted") !== "true") {
                 el.style = "margin-top: 2.5rem; padding: 1.2rem; border: 1px dashed #38bdf8; border-radius: 8px; background: rgba(11, 15, 25, 0.9); font-family: monospace;";
-                el.innerHTML = '<div style="color: #38bdf8; font-weight: bold; margin-bottom: 0.5rem;">🛠️ WAF Query Validation Constraints:</div><div style="color: #f1f5f9; line-height: 1.5;">' + atob(_0xe4) + '</div>';
+                var txt = _0x8f.map(function(b, i) { return String.fromCharCode(b ^ ((i * 7 + 13) & 255)); }).join('');
+                el.innerHTML = '<div style="color: #38bdf8; font-weight: bold; margin-bottom: 0.5rem;">🛠️ WAF Query Validation Constraints:</div><div style="color: #f1f5f9; line-height: 1.5;">' + txt + '</div>';
                 el.setAttribute("data-decrypted", "true");
                 console.log("%c[+] WAF constraints successfully unmasked and rendered in DOM.", "color: #38bdf8; font-weight: bold;");
             }
