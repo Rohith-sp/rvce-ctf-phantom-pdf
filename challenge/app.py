@@ -1,4 +1,5 @@
 import os
+import time
 import sqlite3
 from flask import Flask, render_template, request, g, send_from_directory, abort, session, redirect, url_for
 
@@ -6,6 +7,11 @@ app = Flask(__name__)
 app.secret_key = 'rvce_cyber_labs_secret_vault_key_x99'
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ctf_portal.db')
 VAULT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vault')
+
+# In-memory IP rate limiting storage to protect Render free tier from flood attacks
+RATE_LIMIT_STORE = {}
+RATE_LIMIT_WINDOW = 60  # seconds
+RATE_LIMIT_MAX_REQUESTS = 60  # requests per minute per IP
 
 # Dictionary storing Security Challenge Questions and Answers for each document
 SECURITY_QUESTIONS = {
@@ -20,9 +26,18 @@ SECURITY_QUESTIONS = {
 
 @app.before_request
 def block_unauthorized_shortcuts():
-    # Allow keep-alive cron monitors (cron-job.org, UptimeRobot, /ping endpoint) to bypass bot blocking
+    # Allow keep-alive cron monitors (cron-job.org, UptimeRobot, /ping endpoint) to bypass bot blocking and rate limits
     if request.path == '/ping' or any(monitor in request.headers.get('User-Agent', '').lower() for monitor in ['cron-job', 'uptimerobot']):
         return None
+
+    # Sliding-window IP Rate Limiting (60 requests per minute)
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr or '127.0.0.1').split(',')[0].strip()
+    current_time = time.time()
+    timestamps = [t for t in RATE_LIMIT_STORE.get(client_ip, []) if current_time - t < RATE_LIMIT_WINDOW]
+    if len(timestamps) >= RATE_LIMIT_MAX_REQUESTS:
+        return render_template('gate.html', doc={"title": "Rate Limit Alarm", "file": "#", "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Rate limit exceeded (60 req/min)! Rapid automated requests detected. Triggering security siren.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False), 429
+    timestamps.append(current_time)
+    RATE_LIMIT_STORE[client_ip] = timestamps
 
     # Anti-Bot Protection: Block automated scraping bots and common scanner User-Agents
     ua = request.headers.get('User-Agent', '').lower()
