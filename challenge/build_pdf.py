@@ -57,7 +57,7 @@ startxref
 940
 %%EOF
 """
-    output_dir = os.path.join(os.path.dirname(__file__), 'static')
+    output_dir = os.path.join(os.path.dirname(__file__), 'vault')
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, filename)
     with open(output_path, 'wb') as f:

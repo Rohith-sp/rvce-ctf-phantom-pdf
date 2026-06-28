@@ -141,10 +141,10 @@
                 
                 // Automatically download PDF after 1.5s
                 setTimeout(function() {
-                    window.location.href = "/static/{{ doc['file'] }}";
+                    window.location.href = "/secure_fetch/{{ doc_id }}";
                 }, 1500);
             </script>
-            <a href="/static/{{ doc['file'] }}" class="btn-link" style="color: var(--accent-cyan);">Click here if download does not start automatically ↗</a>
+            <a href="/secure_fetch/{{ doc_id }}" class="btn-link" style="color: var(--accent-cyan);">Click here if download does not start automatically ↗</a>
         {% elif error %}
             <div class="icon">🚨</div>
             <h2 style="color: #ef4444;">Security Breach</h2>

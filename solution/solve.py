@@ -52,7 +52,7 @@ def solve():
     print("[+] Correctly answered security password ('chmod'). Success audio played & download initiated!")
     
     print("[+] Step 5: Downloading PDF & Inspecting Metadata Subject...")
-    res_pdf = client.get("/static/confidential_memo.pdf")
+    res_pdf = client.get("/secure_fetch/5")
     pdf_bytes = res_pdf.data
     print(f"[+] Downloaded confidential_memo.pdf ({len(pdf_bytes)} bytes)!")
         

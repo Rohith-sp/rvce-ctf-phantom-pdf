@@ -1,9 +1,11 @@
 import os
 import sqlite3
-from flask import Flask, render_template, request, g, send_from_directory, abort
+from flask import Flask, render_template, request, g, send_from_directory, abort, session, redirect, url_for
 
 app = Flask(__name__)
+app.secret_key = 'rvce_cyber_labs_secret_vault_key_x99'
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ctf_portal.db')
+VAULT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vault')
 
 # Dictionary storing Security Challenge Questions and Answers for each document
 SECURITY_QUESTIONS = {
@@ -15,6 +17,12 @@ SECURITY_QUESTIONS = {
     6: {"question": "In cybersecurity, what does the first 'M' stand for in a MITM attack?", "answer": "man", "file": "threat_report.pdf", "title": "Threat Vector Analysis Report"},
     7: {"question": "What is the 3-bit binary representation of the decimal number 5?", "answer": "101", "file": "finance_q2.pdf", "title": "Executive Financial Audit Q2"}
 }
+
+@app.before_request
+def block_unauthorized_shortcuts():
+    # Block any direct URL attempts to grab PDF files bypassing the security gate
+    if request.path.lower().endswith('.pdf'):
+        return render_template('gate.html', doc={"title": "Security Violation", "file": request.path, "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Direct PDF retrieval blocked by firewall! Security breach logged.", success=False)
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -66,8 +74,8 @@ def index():
 def search():
     q = request.values.get('q', '')
     
-    # Custom Medium-Hard WAF Filter (Blocks comments, equal signs, and naive payloads)
-    blocked_keywords = ['--', '#', '/*', '=', '1=1', 'true']
+    # Strict WAF Filter (Blocks comments, equality, OR boolean logic, forcing clean UNION SELECT)
+    blocked_keywords = ['--', '#', '/*', '=', '1=1', 'true', ' or ', '||', 'union all']
     for kw in blocked_keywords:
         if kw in q.lower():
             return render_template('index.html', results=[{"title": "⚠️ WAF Security Alert", "access_level": "Blocked", "file_path": "#", "author": f"Firewall detected prohibited pattern: '{kw.strip()}'"}], query=q)
@@ -75,7 +83,7 @@ def search():
     db = get_db()
     cursor = db.cursor()
     
-    # Vulnerable SQL query (Medium-Hard SQLi required to leak records)
+    # Vulnerable SQL query (UNION SELECT required to leak confidential records)
     query = f"SELECT title, access_level, file_path, author FROM documents WHERE title LIKE '%{q}%' AND access_level = 'Public'"
     
     try:
@@ -99,10 +107,24 @@ def download_gate(doc_id):
         user_ans = request.form.get('answer', '').strip().lower()
         if user_ans == doc['answer'].lower() or (doc['answer'] == 'man' and user_ans in ['man', 'middle']):
             success = True
+            session[f'auth_doc_{doc_id}'] = True
         else:
             error = "UNAUTHORIZED ACCESS ALERT: Security breach logged. Redirecting to home portal..."
             
     return render_template('gate.html', doc=doc, doc_id=doc_id, error=error, success=success)
+
+@app.route('/secure_fetch/<int:doc_id>')
+def secure_fetch(doc_id):
+    if doc_id not in SECURITY_QUESTIONS:
+        abort(404)
+        
+    # Verify player passed the security gate challenge for this specific document
+    if not session.get(f'auth_doc_{doc_id}'):
+        doc = SECURITY_QUESTIONS[doc_id]
+        return render_template('gate.html', doc=doc, doc_id=doc_id, error="UNAUTHORIZED ACCESS ALERT: Direct fetch bypass detected! Security breach logged.", success=False)
+        
+    doc = SECURITY_QUESTIONS[doc_id]
+    return send_from_directory(VAULT_DIR, doc['file'], as_attachment=True, download_name=doc['file'])
 
 @app.route('/team')
 def team():
