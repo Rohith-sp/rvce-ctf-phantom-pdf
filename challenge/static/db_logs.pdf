@@ -26,7 +26,7 @@ BT
 0 -20 Td
 (0 critical database synchronization errors detected.) Tj
 0 -20 Td
-(Backup Log Mirror URL (Base64): aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1DeDZmUGlEMy12SQ==) Tj
+(Backup Log Mirror URL (Base64): aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN) Tj
 0 -20 Td
 ET
 endstream
@@ -36,7 +36,7 @@ endobj
   /Title (Database Cache Replication Logs)
   /Author (David Kim)
   /Subject (DB Replication Logs)
-  /Keywords (Mirror: aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1DeDZmUGlEMy12SQ==)
+  /Keywords (Mirror: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
   /Producer (RVCE Cyber Labs Vault System)
 >>
 endobj
