@@ -37,19 +37,31 @@ def init_db():
             CREATE TABLE team (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT,
+                empid TEXT,
                 role TEXT,
+                department TEXT,
                 bio TEXT
             )
         ''')
         
         # Insert initial public and confidential records
-        cursor.execute("INSERT INTO documents (title, access_level, file_path, author) VALUES ('Public Welcome Guide', 'Public', '#', 'Admin')")
+        cursor.execute("INSERT INTO documents (title, access_level, file_path, author) VALUES ('Public Welcome Guide & Policies', 'Public', '#', 'Admin')")
+        cursor.execute("INSERT INTO documents (title, access_level, file_path, author) VALUES ('Q3 Network Infrastructure Topology', 'Public', '#', 'Alice Smith')")
+        cursor.execute("INSERT INTO documents (title, access_level, file_path, author) VALUES ('Frontend Design Guidelines v2.4', 'Public', '#', 'Bob Jones')")
         cursor.execute("INSERT INTO documents (title, access_level, file_path, author) VALUES ('Internal Confidential Memo', 'Confidential', '/static/confidential_memo.pdf', 'Dr. Arthur Pendelton (EMP-8492)')")
         
-        # Insert team members (OSINT recon target)
-        cursor.execute("INSERT INTO team (name, role, bio) VALUES ('Alice Smith', 'System Administrator', 'Manages internal server infrastructure. Project TITAN-101.')")
-        cursor.execute("INSERT INTO team (name, role, bio) VALUES ('Dr. Arthur Pendelton (EMP-8492)', 'Lead Security Architect', 'Specialist in secure PDF vaults and FlateDecode streams. Leading Project VANGUARD. Encryption passphrase protocol requires joining Project Code and Employee ID.')")
-        cursor.execute("INSERT INTO team (name, role, bio) VALUES ('Bob Jones', 'Frontend Developer', 'UI/UX specialist. Project ORION-404.')")
+        # Insert team members (Blended realistic OSINT targets)
+        team_members = [
+            ('Alice Smith', 'EMP-1042', 'Principal Cloud Architect', 'Infrastructure & DevOps', 'Oversees AWS and multi-cloud server clusters. Currently focused on automating zero-downtime CI/CD pipelines under Project TITAN-101.'),
+            ('Bob Jones', 'EMP-3391', 'Lead UI/UX Designer', 'Frontend Engineering', 'Passionate about glassmorphism, micro-animations, and responsive accessibility. Spearheading design systems for Project ORION-404.'),
+            ('Samantha Vance', 'EMP-6104', 'VP of Product Strategy', 'Executive Management', 'Coordinating cross-department milestones and client relations. Driving user engagement metrics across Europe and North America under Project HELIOS-881.'),
+            ('David Kim', 'EMP-7728', 'Senior Database Engineer', 'Data Storage', 'Optimizing distributed SQL querying engines and high-availability caching. Managing storage protocols for Project CYBER-303.'),
+            ('Dr. Arthur Pendelton', 'EMP-8492', 'Lead Security Architect', 'Cyber Defense Labs', 'Specializes in document steganography, encrypted stream vaults, and zero-trust authentication. Leading research on Project VANGUARD. Reminder: division vault streaming protocols standardize keys as [ProjectCode]-[EmpID].'),
+            ('Elena Rostova', 'EMP-9012', 'Threat Intelligence Analyst', 'Security Operations', 'Monitors AP threat vectors, network anomalies, and malware heuristics. Coordinating defensive counter-measures for Project NEXUS-550.')
+        ]
+        
+        for m in team_members:
+            cursor.execute("INSERT INTO team (name, empid, role, department, bio) VALUES (?, ?, ?, ?, ?)", m)
         
         db.commit()
 
@@ -78,7 +90,7 @@ def search():
 def team():
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("SELECT name, role, bio FROM team")
+    cursor.execute("SELECT name, empid, role, department, bio FROM team")
     members = cursor.fetchall()
     return render_template('team.html', members=members)
 
