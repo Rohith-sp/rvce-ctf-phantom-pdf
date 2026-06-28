@@ -163,6 +163,10 @@ def team():
     ]
     return render_template('team.html', members=members)
 
+@app.errorhandler(404)
+def unauthorized_or_missing_page(e):
+    return render_template('gate.html', doc={"title": "Perimeter Alarm", "file": request.path, "question": ""}, doc_id=0, error=f"UNAUTHORIZED ACCESS ALERT: Endpoint ('{request.path}') blocked or invalid! Triggering security siren.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False), 404
+
 if __name__ == '__main__':
     init_db()
     app.run(host='0.0.0.0', port=5000)
