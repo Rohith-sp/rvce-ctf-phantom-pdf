@@ -20,6 +20,12 @@ SECURITY_QUESTIONS = {
 
 @app.before_request
 def block_unauthorized_shortcuts():
+    # Anti-Bot Protection: Block automated scraping bots and common scanner User-Agents
+    ua = request.headers.get('User-Agent', '').lower()
+    bot_signatures = ['curl', 'wget', 'python-requests', 'scrapy', 'sqlmap', 'nikto', 'burp', 'nmap', 'crawler', 'spider', 'bot', 'go-http-client', 'java/']
+    if any(bot in ua for bot in bot_signatures):
+        return render_template('gate.html', doc={"title": "Bot Attack Blocked", "file": "#", "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Automated bot scanning detected and rejected by perimeter WAF!", success=False), 403
+
     # Block any direct URL attempts to grab PDF files bypassing the security gate
     if request.path.lower().endswith('.pdf'):
         return render_template('gate.html', doc={"title": "Security Violation", "file": request.path, "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Direct PDF retrieval blocked by firewall! Security breach logged.", success=False)
@@ -73,8 +79,8 @@ def index():
 def search():
     q = request.values.get('q', '')
     
-    # Relaxed WAF Filter allowing flexible UNION SELECT variations (*, comments, WHERE filtering)
-    blocked_keywords = ['drop ', 'delete ', 'insert ', 'update ', 'alter ', 'exec ']
+    # Strict WAF preventing direct querying of main target while allowing general UNION extraction
+    blocked_keywords = ['drop ', 'delete ', 'insert ', 'update ', 'alter ', 'exec ', 'pendelton', 'arthur', 'memo', '/download/5', 'vanguard']
     for kw in blocked_keywords:
         if kw in q.lower():
             return render_template('index.html', results=[{"title": "⚠️ WAF Security Alert", "access_level": "Blocked", "file_path": "#", "author": f"Firewall detected prohibited pattern: '{kw.strip()}'"}], query=q)
