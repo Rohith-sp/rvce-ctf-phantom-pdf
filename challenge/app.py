@@ -24,11 +24,11 @@ def block_unauthorized_shortcuts():
     ua = request.headers.get('User-Agent', '').lower()
     bot_signatures = ['curl', 'wget', 'python-requests', 'scrapy', 'sqlmap', 'nikto', 'burp', 'nmap', 'crawler', 'spider', 'bot', 'go-http-client', 'java/']
     if any(bot in ua for bot in bot_signatures):
-        return render_template('gate.html', doc={"title": "Bot Attack Blocked", "file": "#", "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Automated bot scanning detected and rejected by perimeter WAF!", success=False), 403
+        return render_template('gate.html', doc={"title": "Bot Attack Blocked", "file": "#", "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Automated bot scanning detected and rejected by perimeter WAF!", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False), 403
 
     # Block any direct URL attempts to grab PDF files bypassing the security gate
     if request.path.lower().endswith('.pdf'):
-        return render_template('gate.html', doc={"title": "Security Violation", "file": request.path, "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Direct PDF retrieval blocked by firewall! Security breach logged.", success=False)
+        return render_template('gate.html', doc={"title": "Security Violation", "file": request.path, "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Direct PDF retrieval blocked by firewall! Security breach logged.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -118,9 +118,10 @@ def download_gate(doc_id):
             success = True
             session[f'auth_doc_{doc_id}'] = True
         else:
-            error = "UNAUTHORIZED ACCESS ALERT: Security breach logged. Redirecting to home portal..."
+            error = "UNAUTHORIZED ACCESS ALERT: Incorrect security authorization answer! Triggering security siren..."
             
-    return render_template('gate.html', doc=doc, doc_id=doc_id, error=error, success=success)
+    redirect_target = "https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq" if error else None
+    return render_template('gate.html', doc=doc, doc_id=doc_id, error=error, redirect_url=redirect_target, success=success)
 
 @app.route('/secure_fetch/<int:doc_id>')
 def secure_fetch(doc_id):
@@ -130,7 +131,7 @@ def secure_fetch(doc_id):
     # Verify player passed the security gate challenge for this specific document
     if not session.get(f'auth_doc_{doc_id}'):
         doc = SECURITY_QUESTIONS[doc_id]
-        return render_template('gate.html', doc=doc, doc_id=doc_id, error="UNAUTHORIZED ACCESS ALERT: Direct fetch bypass detected! Security breach logged.", success=False)
+        return render_template('gate.html', doc=doc, doc_id=doc_id, error="UNAUTHORIZED ACCESS ALERT: Direct fetch bypass detected! Security breach logged.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
         
     doc = SECURITY_QUESTIONS[doc_id]
     return send_from_directory(VAULT_DIR, doc['file'], as_attachment=True, download_name=doc['file'])
