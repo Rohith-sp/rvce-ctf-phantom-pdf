@@ -12,7 +12,7 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
 endobj
 5 0 obj
-<< /Length 400 >>
+<< /Length 450 >>
 stream
 BT
 /F1 18 Tf
@@ -42,6 +42,7 @@ endobj
   /Title (CONFIDENTIAL INTERNAL AUDIT MEMO)
   /Author (Dr. Arthur Pendelton [EMP-8492])
   /Subject ([Vault Protocol: VANGUARD-8492 Verified] -> ROT13 Cipher: eiprpgs{ha10a_fdyv_g0_e0g13_cqs_z3g4q4g4})
+  /Keywords (Encrypted Decoy Video Payload (Base64): aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1tX0ZvOFczakNVQQ==)
   /Producer (RVCE Cyber Labs Vault System)
 >>
 endobj
@@ -53,9 +54,9 @@ xref
 0000000109 00000 n 
 0000000220 00000 n 
 0000000288 00000 n 
-0000000750 00000 n 
+0000000800 00000 n 
 trailer
 << /Size 7 /Root 1 0 R /Info 6 0 R >>
 startxref
-880
+940
 %%EOF

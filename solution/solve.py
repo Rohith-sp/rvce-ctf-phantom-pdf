@@ -51,13 +51,16 @@ def solve():
     print("[+] Step 4: Bypassing Security Challenge Question Gate (/download/5)...")
     # Arthur's document is ID 5. Question: Which Linux command is used to change file permissions? Ans: chmod
     res_gate = client.post("/download/5", data={'answer': 'chmod'})
-    if res_gate.status_code != 200 or len(res_gate.data) < 100:
+    gate_html = res_gate.data.decode('utf-8')
+    if "Access Granted" not in gate_html:
         print("[-] Failed to pass security challenge gate for target PDF!")
         return False
-    print(f"[+] Correctly answered security password ('chmod'). Downloaded target PDF ({len(res_gate.data)} bytes)!")
+    print("[+] Correctly answered security password ('chmod'). Success audio played & download initiated!")
     
-    print("[+] Step 5: Inspecting PDF Verse & Metadata Subject...")
-    pdf_bytes = res_gate.data
+    print("[+] Step 5: Downloading PDF & Inspecting Metadata Subject...")
+    res_pdf = client.get("/static/confidential_memo.pdf")
+    pdf_bytes = res_pdf.data
+    print(f"[+] Downloaded confidential_memo.pdf ({len(pdf_bytes)} bytes)!")
         
     # Search for ROT13 Cipher inside Document Properties Subject field
     cipher_match = re.search(rb"ROT13 Cipher:\s*([a-zA-Z0-9_{}-]+)", pdf_bytes)

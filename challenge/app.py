@@ -93,16 +93,16 @@ def download_gate(doc_id):
         
     doc = SECURITY_QUESTIONS[doc_id]
     error = None
+    success = False
     
     if request.method == 'POST':
         user_ans = request.form.get('answer', '').strip().lower()
         if user_ans == doc['answer'].lower() or (doc['answer'] == 'man' and user_ans in ['man', 'middle']):
-            static_dir = os.path.join(os.path.dirname(__file__), 'static')
-            return send_from_directory(static_dir, doc['file'], as_attachment=True)
+            success = True
         else:
-            error = "Invalid Security Password Answer. Verification failed."
+            error = "UNAUTHORIZED ACCESS ALERT: Security breach logged. Redirecting to home portal..."
             
-    return render_template('gate.html', doc=doc, doc_id=doc_id, error=error)
+    return render_template('gate.html', doc=doc, doc_id=doc_id, error=error, success=success)
 
 @app.route('/team')
 def team():

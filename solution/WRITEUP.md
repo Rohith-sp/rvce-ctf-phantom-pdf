@@ -21,11 +21,14 @@ Navigating to `/team` (Team Directory), we observe the division roster and a glo
 Reading the staff bios reveals that **Dr. Arthur Pendelton (`EMP-8492`)** is the Lead Security Architect handling enterprise vault cryptography. His project codename is `VANGUARD`.
 Matching this back to our SQL injection query results, we locate Arthur's specific document: **"Internal Security Architecture Review"** (`/download/5`).
 
-### 3. Security Password Gate Bypass
-Clicking download on `/download/5` does not directly serve the file. Instead, it presents a **Security Access Control Challenge** asking a general knowledge tech question:
+### 3. Security Password Gate Bypass & Decoy Traps
+Clicking download on `/download/5` presents a **Security Access Control Challenge** asking:
 > *Which Linux command is used to change file or directory permissions?*
 
-Answering **`chmod`** unlocks the security gate and downloads `confidential_memo.pdf`. *(Note: All other 6 decoy PDFs have different general knowledge questions such as HTTP status codes, DNS acronyms, or HTTPS port numbers)*.
+Answering **`chmod`** triggers a celebratory success audio chime (`success.mp3`) and downloads `confidential_memo.pdf`. 
+*(Note: Entering an incorrect answer triggers an alarm chime (`wrong.mp3`), displays an Unauthorized Access Alert, and redirects players back to the home portal after 3 seconds).*
+
+> **Base64 Decoy Traps**: Across the various decoy PDFs, players inspecting strings or metadata will find base64 encoded strings (e.g., `aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1DeDZmUGlEMy12SQ==`). Decoding these reveals YouTube video links designed to waste time and mislead scrapers.
 
 ### 4. PDF Verse & Metadata Forensics
 Opening `confidential_memo.pdf` displays a poetic verse written on the memo:

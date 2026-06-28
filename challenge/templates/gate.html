@@ -40,7 +40,7 @@
             backdrop-filter: blur(12px);
             text-align: center;
         }
-        .icon { font-size: 3rem; margin-bottom: 1rem; }
+        .icon { font-size: 3.5rem; margin-bottom: 1rem; }
         h2 { margin: 0 0 0.5rem 0; font-size: 1.6rem; color: #fff; }
         .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; }
         .doc-info {
@@ -93,13 +93,26 @@
             box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
         }
         .error {
-            background: rgba(239, 68, 68, 0.15);
+            background: rgba(239, 68, 68, 0.2);
             color: #f87171;
-            border: 1px solid rgba(248, 113, 113, 0.3);
-            padding: 0.8rem;
-            border-radius: 8px;
+            border: 1px solid #ef4444;
+            padding: 1rem;
+            border-radius: 10px;
             margin-bottom: 1.5rem;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+        }
+        .success-box {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid #10b981;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
         }
         .back-link { display: inline-block; margin-top: 1.5rem; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
         .back-link:hover { color: #fff; }
@@ -107,29 +120,77 @@
 </head>
 <body>
     <div class="gate-card">
-        <div class="icon">🔒</div>
-        <h2>Access Control Challenge</h2>
-        <div class="subtitle">RVCE Cyber Labs Vault Security Gate</div>
-        
-        <div class="doc-info">
-            <strong>{{ doc['title'] }}</strong>
-            <span>Requested File: {{ doc['file'] }}</span>
-        </div>
-
-        {% if error %}
-            <div class="error">⚠️ {{ error }}</div>
-        {% endif %}
-
-        <form method="post">
-            <div class="question-box">
-                <label>Security Verification Question:</label>
-                <div style="color: var(--accent-cyan); margin-bottom: 0.8rem; font-size: 1.05rem;">
-                    {{ doc['question'] }}
-                </div>
-                <input type="text" name="answer" placeholder="Enter password / answer..." required autofocus>
+        {% if success %}
+            <div class="icon">🎉</div>
+            <h2>Access Granted</h2>
+            <div class="subtitle">Security verification confirmed</div>
+            
+            <div class="success-box">
+                ✅ Password verified! Initiating document download...
             </div>
-            <button type="submit">Verify & Download Document ↗</button>
-        </form>
+
+            <!-- Play success chime -->
+            <audio autoplay id="successAudio">
+                <source src="/static/success.mp3" type="audio/mpeg">
+            </audio>
+
+            <script>
+                // Attempt automatic audio play
+                var audio = document.getElementById('successAudio');
+                if (audio) { audio.play().catch(e => console.log('Audio autoplay prevented')); }
+                
+                // Automatically download PDF after 1.5s
+                setTimeout(function() {
+                    window.location.href = "/static/{{ doc['file'] }}";
+                }, 1500);
+            </script>
+            <a href="/static/{{ doc['file'] }}" class="btn-link" style="color: var(--accent-cyan);">Click here if download does not start automatically ↗</a>
+        {% elif error %}
+            <div class="icon">🚨</div>
+            <h2 style="color: #ef4444;">Security Breach</h2>
+            <div class="subtitle">Invalid clearance authorization</div>
+
+            <div class="error">
+                ⚠️ {{ error }}
+            </div>
+
+            <!-- Play wrong answer alarm -->
+            <audio autoplay id="wrongAudio">
+                <source src="/static/wrong.mp3" type="audio/mpeg">
+            </audio>
+
+            <script>
+                // Attempt automatic audio play
+                var audio = document.getElementById('wrongAudio');
+                if (audio) { audio.play().catch(e => console.log('Audio autoplay prevented')); }
+                
+                // Redirect back to home portal after 3.5 seconds
+                setTimeout(function() {
+                    window.location.href = "/";
+                }, 3500);
+            </script>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Redirecting to home portal in 3 seconds...</p>
+        {% else %}
+            <div class="icon">🔒</div>
+            <h2>Access Control Challenge</h2>
+            <div class="subtitle">RVCE Cyber Labs Vault Security Gate</div>
+            
+            <div class="doc-info">
+                <strong>{{ doc['title'] }}</strong>
+                <span>Requested File: {{ doc['file'] }}</span>
+            </div>
+
+            <form method="post">
+                <div class="question-box">
+                    <label>Security Verification Question:</label>
+                    <div style="color: var(--accent-cyan); margin-bottom: 0.8rem; font-size: 1.05rem;">
+                        {{ doc['question'] }}
+                    </div>
+                    <input type="text" name="answer" placeholder="Enter password / answer..." required autofocus>
+                </div>
+                <button type="submit">Verify & Download Document ↗</button>
+            </form>
+        {% endif %}
         
         <a href="/" class="back-link">← Return to Document Repository</a>
     </div>
