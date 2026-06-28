@@ -1,9 +1,20 @@
 import os
 import sqlite3
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, send_from_directory, abort
 
 app = Flask(__name__)
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ctf_portal.db')
+
+# Dictionary storing Security Challenge Questions and Answers for each document
+SECURITY_QUESTIONS = {
+    1: {"question": "What is the HTTP status code for 'Not Found'?", "answer": "404", "file": "design_v2.pdf", "title": "Frontend Design Guidelines v2.4"},
+    2: {"question": "What is the standard port number for unencrypted HTTP?", "answer": "80", "file": "welcome.pdf", "title": "Public Welcome Guide & Policies"},
+    3: {"question": "What is the default port number for encrypted HTTPS?", "answer": "443", "file": "topology_q3.pdf", "title": "Q3 Network Infrastructure Topology"},
+    4: {"question": "Which network protocol translates domain names into IP addresses? (3 letters)", "answer": "dns", "file": "db_logs.pdf", "title": "Database Cache Replication Logs"},
+    5: {"question": "Which Linux command is used to change file or directory permissions?", "answer": "chmod", "file": "confidential_memo.pdf", "title": "Internal Security Architecture Review"},
+    6: {"question": "In cybersecurity, what does the first 'M' stand for in a MITM attack?", "answer": "man", "file": "threat_report.pdf", "title": "Threat Vector Analysis Report"},
+    7: {"question": "What is the 3-bit binary representation of the decimal number 5?", "answer": "101", "file": "finance_q2.pdf", "title": "Executive Financial Audit Q2"}
+}
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -19,11 +30,10 @@ def close_connection(exception):
         db.close()
 
 def init_db():
-    if os.path.exists(DB_PATH):
-        os.remove(DB_PATH)
     with app.app_context():
         db = get_db()
         cursor = db.cursor()
+        cursor.execute('DROP TABLE IF EXISTS documents')
         cursor.execute('''
             CREATE TABLE documents (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,36 +43,19 @@ def init_db():
                 author TEXT
             )
         ''')
-        cursor.execute('''
-            CREATE TABLE team (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT,
-                empid TEXT,
-                role TEXT,
-                department TEXT,
-                bio TEXT
-            )
-        ''')
         
-        # Insert initial public and confidential records
-        cursor.execute("INSERT INTO documents (title, access_level, file_path, author) VALUES ('Public Welcome Guide & Policies', 'Public', '#', 'Admin')")
-        cursor.execute("INSERT INTO documents (title, access_level, file_path, author) VALUES ('Q3 Network Infrastructure Topology', 'Public', '#', 'Alice Smith')")
-        cursor.execute("INSERT INTO documents (title, access_level, file_path, author) VALUES ('Frontend Design Guidelines v2.4', 'Public', '#', 'Bob Jones')")
-        cursor.execute("INSERT INTO documents (title, access_level, file_path, author) VALUES ('Internal Confidential Memo', 'Confidential', '/static/confidential_memo.pdf', 'Dr. Arthur Pendelton (EMP-8492)')")
-        
-        # Insert team members (Blended realistic OSINT targets)
-        team_members = [
-            ('Alice Smith', 'EMP-1042', 'Principal Cloud Architect', 'Infrastructure & DevOps', 'Oversees AWS and multi-cloud server clusters. Currently focused on automating zero-downtime CI/CD pipelines under Project TITAN-101.'),
-            ('Bob Jones', 'EMP-3391', 'Lead UI/UX Designer', 'Frontend Engineering', 'Passionate about glassmorphism, micro-animations, and responsive accessibility. Spearheading design systems for Project ORION-404.'),
-            ('Samantha Vance', 'EMP-6104', 'VP of Product Strategy', 'Executive Management', 'Coordinating cross-department milestones and client relations. Driving user engagement metrics across Europe and North America under Project HELIOS-881.'),
-            ('David Kim', 'EMP-7728', 'Senior Database Engineer', 'Data Storage', 'Optimizing distributed SQL querying engines and high-availability caching. Managing storage protocols for Project CYBER-303.'),
-            ('Dr. Arthur Pendelton', 'EMP-8492', 'Lead Security Architect', 'Cyber Defense Labs', 'Specializes in document steganography, encrypted stream vaults, and zero-trust authentication. Leading research on Project VANGUARD.'),
-            ('Elena Rostova', 'EMP-9012', 'Threat Intelligence Analyst', 'Security Operations', 'Monitors AP threat vectors, network anomalies, and malware heuristics. Coordinating defensive counter-measures for Project NEXUS-550.')
+        # Populate vault with realistic mixture of Public, Confidential, and Restricted files
+        docs = [
+            ("Frontend Design Guidelines v2.4", "Public", "/download/1", "Bob Jones"),
+            ("Public Welcome Guide & Policies", "Public", "/download/2", "Admin"),
+            ("Q3 Network Infrastructure Topology", "Confidential", "/download/3", "Alice Smith"),
+            ("Database Cache Replication Logs", "Confidential", "/download/4", "David Kim"),
+            ("Internal Security Architecture Review", "Confidential", "/download/5", "Dr. Arthur Pendelton (EMP-8492)"),
+            ("Threat Vector Analysis Report", "Restricted", "/download/6", "Elena Rostova"),
+            ("Executive Financial Audit Q2", "Restricted", "/download/7", "Samantha Vance")
         ]
         
-        for m in team_members:
-            cursor.execute("INSERT INTO team (name, empid, role, department, bio) VALUES (?, ?, ?, ?, ?)", m)
-        
+        cursor.executemany('INSERT INTO documents (title, access_level, file_path, author) VALUES (?, ?, ?, ?)', docs)
         db.commit()
 
 @app.route('/')
@@ -93,14 +86,35 @@ def search():
         
     return render_template('index.html', results=results, query=q)
 
+@app.route('/download/<int:doc_id>', methods=['GET', 'POST'])
+def download_gate(doc_id):
+    if doc_id not in SECURITY_QUESTIONS:
+        abort(404)
+        
+    doc = SECURITY_QUESTIONS[doc_id]
+    error = None
+    
+    if request.method == 'POST':
+        user_ans = request.form.get('answer', '').strip().lower()
+        if user_ans == doc['answer'].lower() or (doc['answer'] == 'man' and user_ans in ['man', 'middle']):
+            static_dir = os.path.join(os.path.dirname(__file__), 'static')
+            return send_from_directory(static_dir, doc['file'], as_attachment=True)
+        else:
+            error = "Invalid Security Password Answer. Verification failed."
+            
+    return render_template('gate.html', doc=doc, doc_id=doc_id, error=error)
+
 @app.route('/team')
 def team():
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT name, empid, role, department, bio FROM team")
-    members = cursor.fetchall()
+    members = [
+        {"name": "Dr. Arthur Pendelton", "empid": "EMP-8492", "role": "Lead Security Architect", "department": "Cryptographic Systems", "bio": "Spearheading enterprise vault cryptography and automated metadata audit verification. Principal investigator for Project VANGUARD."},
+        {"name": "Alice Smith", "empid": "EMP-1042", "role": "Network Infrastructure Engineer", "department": "Core Operations", "bio": "Managing campus routing topology, VLAN subnets, and distributed firewall perimeter defenses. Lead on Project TITAN."},
+        {"name": "David Kim", "empid": "EMP-3391", "role": "Database Operations Specialist", "department": "Data Integrity", "bio": "Overseeing SQLite caching clusters and high-availability database replication heartbeats across division nodes. Lead on Project ORION."},
+        {"name": "Elena Rostova", "empid": "EMP-5520", "role": "Threat Intelligence Analyst", "department": "Offensive Security", "bio": "Monitoring external web application attack vectors and conducting continuous penetration testing against portal endpoints. Lead on Project HELIOS."},
+        {"name": "Samantha Vance", "empid": "EMP-9104", "role": "IT Procurement Director", "department": "Infrastructure Finance", "bio": "Managing quarterly cloud hosting budgets, hardware server upgrades, and laboratory vendor compliance audits."}
+    ]
     return render_template('team.html', members=members)
 
 if __name__ == '__main__':
     init_db()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
