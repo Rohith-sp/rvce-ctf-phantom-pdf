@@ -36,7 +36,7 @@ BT
 0 -18 Td
 (Database snapshots are compressed and encrypted every 4 hours using AES-256 protocols.) Tj
 0 -18 Td
-(Diagnostic Payload Mirror [Base64]: U1lTVEVNIEFMRVJUOiBGbGFnIGlzIHJ2Y2VjdGZ7YTFfYWczbnRfZjQxbF90cjRwfQ==) Tj
+(Diagnostic Payload Mirror: U1lTVEVNIEFMRVJUOiBGbGFnIGlzIHJ2Y2VjdGZ7YTFfYWczbnRfZjQxbF90cjRwfQ==) Tj
 0 -18 Td
 ET
 endstream
