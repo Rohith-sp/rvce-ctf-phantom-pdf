@@ -68,7 +68,7 @@ Answering **`chmod`** plays the celebratory **`success.mp3`** chime, authorizes 
 
 ### Step 5: Forensics & Multi-Layer Decryption
 Opening `confidential_memo.pdf` reveals Arthur's poetic riddle:
-> *"Unseen upon the printed page, I hold the tale of birth and age. Find the Subject hex in Properties deep, XOR with my Project Code, then thirteen steps to secrets keep."*
+> *"No glyph upon the canvas speaks my name, though I have watched this artifact since its beginning. Beneath its record lies a serpent of digits, seeking its companion from the maker's mark. Bind the two in opposition, and let Caesar's second cousin finish the tale."*
 
 Inspecting the PDF Document Properties (`Ctrl + D` or `pypdf`) reveals the Subject field:
 ```text

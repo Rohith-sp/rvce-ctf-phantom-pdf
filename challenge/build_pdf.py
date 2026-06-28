@@ -105,10 +105,12 @@ def create_all_pdfs():
     make_pdf("confidential_memo.pdf", "CONFIDENTIAL INTERNAL AUDIT MEMO", "Dr. Arthur Pendelton", [
         "Subject: Security Vault Passphrase & Encryption Audit",
         "",
-        "Unseen upon the printed page,",
-        "I hold the tale of birth and age.",
-        "Find the Subject hex in Properties deep,",
-        "XOR with my Project Code, then thirteen steps to secrets keep."
+        "No glyph upon the canvas speaks my name,",
+        "though I have watched this artifact since its beginning.",
+        "Beneath its record lies a serpent of digits,",
+        "seeking its companion from the maker's mark.",
+        "Bind the two in opposition,",
+        "and let Caesar's second cousin finish the tale."
     ], subject_meta=f"Encrypted Verification Token: {hex_token}", keywords_meta=f"Internal Video Archive: {b64_yt}")
 
     # 6. Decoy Restricted Threat Report (Contains realistic fake token in body)
