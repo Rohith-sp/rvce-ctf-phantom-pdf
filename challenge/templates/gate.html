@@ -164,12 +164,12 @@
                 var audio = document.getElementById('wrongAudio');
                 if (audio) { audio.play().catch(e => console.log('Audio autoplay prevented')); }
                 
-                // Redirect back to home portal after 3.5 seconds
+                // Redirect to target or back to home portal after 2.5 seconds
                 setTimeout(function() {
-                    window.location.href = "/";
-                }, 3500);
+                    window.location.href = "{{ redirect_url if redirect_url else '/' }}";
+                }, 2500);
             </script>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Redirecting to home portal in 3 seconds...</p>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Redirecting by perimeter security in 2.5 seconds...</p>
         {% else %}
             <div class="icon">🔒</div>
             <h2>Access Control Challenge</h2>

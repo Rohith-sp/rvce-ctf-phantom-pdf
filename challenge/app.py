@@ -83,7 +83,7 @@ def search():
     blocked_keywords = ['*', '--', '#', '/*', ' or ', '||', 'drop ', 'delete ', 'insert ', 'update ', 'alter ', 'exec ', 'where ', 'limit', 'offset', 'download/1', 'download/2', 'download/3', 'download/4', 'download/5', 'download/6', 'download/7', 'pendelton', 'arthur', 'memo', 'vanguard', 'bob', 'alice', 'david', 'elena', 'samantha', 'jones', 'smith', 'kim', 'rostova', 'vance']
     for kw in blocked_keywords:
         if kw in q.lower():
-            return render_template('index.html', results=[{"title": "⚠️ WAF Security Alert", "access_level": "Blocked", "file_path": "#", "author": f"Firewall detected prohibited pattern: '{kw.strip()}'"}], query=q)
+            return render_template('gate.html', doc={"title": "WAF Security Alarm", "file": "#", "question": ""}, doc_id=0, error=f"UNAUTHORIZED ACCESS ALERT: Simple/Beginner SQL Injection pattern ('{kw.strip()}') detected by firewall! Triggering security siren.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
             
     db = get_db()
     cursor = db.cursor()
