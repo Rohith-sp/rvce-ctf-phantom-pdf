@@ -45,9 +45,10 @@ def block_unauthorized_shortcuts():
     if any(bot in ua for bot in bot_signatures):
         return render_template('gate.html', doc={"title": "Bot Attack Blocked", "file": "#", "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Automated bot scanning detected and rejected by perimeter WAF!", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False), 403
 
-    # Block any direct URL attempts to grab PDF files bypassing the security gate
-    if request.path.lower().endswith('.pdf'):
-        return render_template('gate.html', doc={"title": "Security Violation", "file": request.path, "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Direct PDF retrieval blocked by firewall! Security breach logged.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
+    # Block direct file probing for sensitive backend or unauthenticated file extensions
+    forbidden_exts = ('.pdf', '.py', '.db', '.txt', '.md', '.env', '.sh', '.yml', '.json', '.sql', '.conf')
+    if request.path.lower().endswith(forbidden_exts):
+        return render_template('gate.html', doc={"title": "Security Violation", "file": request.path, "question": ""}, doc_id=0, error="UNAUTHORIZED ACCESS ALERT: Direct file probing blocked by firewall! Security breach logged.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
 
 def get_db():
     db = getattr(g, '_database', None)
