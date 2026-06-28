@@ -44,5 +44,5 @@ python app.py        # Starts the web server on port 5000
 ## Progressive Hints (For Scoreboard)
 
 * **Hint 1 (-50 pts)**: The document search bar has a basic firewall blocking `=`, `--`, `#`, and `OR`. Try using a `UNION SELECT` query with `LIKE` to bypass the firewall and leak documents marked as `Confidential`.
-* **Hint 2 (-100 pts)**: Once downloaded, open the confidential memo and read the poetic riddle carefully: *"Seek the Subject of my Properties to spin the cipher thirteen steps around."*
+* **Hint 2 (-100 pts)**: Once downloaded, open the confidential memo and read the verse carefully: *"Unseen upon the printed page, I hold the tale of birth and age. Find the Subject in my Properties deep, Then spin it thirteen steps to secrets keep."*
 * **Hint 3 (-150 pts)**: Open the PDF's Document Properties / Metadata (or use `strings` / `exiftool`) to look at the `/Subject` field. You will see a ROT13 encoded cipher string! Decode it by rotating 13 steps.

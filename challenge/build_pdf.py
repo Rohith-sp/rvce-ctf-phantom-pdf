@@ -4,7 +4,7 @@ import codecs
 def create_pdf():
     # Passphrase derived from OSINT Recon
     osint_key = "VANGUARD-8492"
-    flag = "rvcectf{0s1nt_w3b_t0_hd_pdf_st3g4n0gr4phy_m4st3r}"
+    flag = "rvcectf{un10n_sqli_t0_r0t13_pdf_m3t4d4t4}"
     
     # Encrypt flag using ROT13 (Caesar cipher shift 13) as requested
     rot13_cipher = codecs.encode(flag, 'rot_13')
@@ -52,7 +52,7 @@ endobj
 endobj
 
 5 0 obj
-<< /Length 310 >>
+<< /Length 340 >>
 stream
 BT
 /F1 18 Tf
@@ -64,9 +64,13 @@ BT
 0 -25 Td
 (Subject: Security Vault Passphrase & Encryption Audit) Tj
 0 -35 Td
-(Riddle: I am unseen upon the printed page, yet hold the document's birth and age.) Tj
+(Unseen upon the printed page,) Tj
 0 -20 Td
-(Seek the Subject of my Properties to spin the cipher thirteen steps around.) Tj
+(I hold the tale of birth and age.) Tj
+0 -20 Td
+(Find the Subject in my Properties deep,) Tj
+0 -20 Td
+(Then spin it thirteen steps to secrets keep.) Tj
 ET
 endstream
 endobj
