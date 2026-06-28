@@ -80,7 +80,7 @@ def search():
     q = request.values.get('q', '')
     
     # Advanced WAF blocking beginner shortcuts (*, comments, OR logic, WHERE/LIMIT isolation)
-    blocked_keywords = ['*', '--', '#', '/*', ' or ', '||', 'drop ', 'delete ', 'insert ', 'update ', 'alter ', 'exec ', 'where ', 'limit', 'offset', 'download/1', 'download/2', 'download/3', 'download/4', 'download/5', 'download/6', 'download/7', 'pendelton', 'arthur', 'memo', 'vanguard', 'bob', 'alice', 'david', 'elena', 'samantha', 'jones', 'smith', 'kim', 'rostova', 'vance']
+    blocked_keywords = ['*', '--', '#', '/*', ' or ', '||', 'drop ', 'delete ', 'insert ', 'update ', 'alter ', 'exec ', 'where ', 'limit', 'offset', 'download/1', 'download/2', 'download/3', 'download/4', 'download/5', 'download/6', 'download/7', 'pendelton', 'arthur', 'memo', 'vanguard', 'bob', 'alice', 'david', 'elena', 'samantha', 'jones', 'smith', 'kim', 'rostova', 'vance', 'marcus', 'viktor', 'chloe', 'lucas', 'sophia', 'harrison', 'amara', 'sterling', 'reznov', 'bennett', 'thorne', 'wells', 'chen']
     for kw in blocked_keywords:
         if kw in q.lower():
             return render_template('gate.html', doc={"title": "WAF Security Alarm", "file": "#", "question": ""}, doc_id=0, error=f"UNAUTHORIZED ACCESS ALERT: Simple/Beginner SQL Injection pattern ('{kw.strip()}') detected by firewall! Triggering security siren.", redirect_url="https://youtu.be/Z9oThmTT6j0?si=ifNay_E1kgFOF0tq", success=False)
@@ -135,9 +135,16 @@ def secure_fetch(doc_id):
 def team():
     members = [
         {"name": "Dr. Arthur Pendelton", "empid": "EMP-8492", "role": "Lead Security Architect", "department": "Cryptographic Systems", "bio": "Spearheading enterprise vault cryptography and automated metadata audit verification. Principal investigator for Project VANGUARD."},
+        {"name": "Marcus Sterling", "empid": "EMP-4182", "role": "Cloud Infrastructure Architect", "department": "Cloud Systems", "bio": "Architecting multi-region AWS Kubernetes clusters and zero-trust service mesh networking. Lead on Project AETHER."},
+        {"name": "Viktor Reznov", "empid": "EMP-7731", "role": "Malware Reverse Engineer", "department": "Threat Research", "bio": "Dissecting nation-state kernel rootkits, memory-resident payloads, and polymorphic C2 communication channels. Lead on Project CERBERUS."},
         {"name": "Alice Smith", "empid": "EMP-1042", "role": "Network Infrastructure Engineer", "department": "Core Operations", "bio": "Managing campus routing topology, VLAN subnets, and distributed firewall perimeter defenses. Lead on Project TITAN."},
+        {"name": "Chloe Bennett", "empid": "EMP-2904", "role": "Identity & Access Specialist", "department": "Zero Trust IAM", "bio": "Enforcing OAuth2 token claims, SAML federation protocols, and hardware biometric MFA policies across enterprise portals. Lead on Project AEGIS."},
         {"name": "David Kim", "empid": "EMP-3391", "role": "Database Operations Specialist", "department": "Data Integrity", "bio": "Overseeing SQLite caching clusters and high-availability database replication heartbeats across division nodes. Lead on Project ORION."},
+        {"name": "Lucas Thorne", "empid": "EMP-6029", "role": "DevSecOps Pipeline Engineer", "department": "Automated Security", "bio": "Integrating SAST/DAST scanner runners into continuous deployment workflows and managing container registry vulnerability signatures. Lead on Project VULCAN."},
         {"name": "Elena Rostova", "empid": "EMP-5520", "role": "Threat Intelligence Analyst", "department": "Offensive Security", "bio": "Monitoring external web application attack vectors and conducting continuous penetration testing against portal endpoints. Lead on Project HELIOS."},
+        {"name": "Dr. Sophia Sterling", "empid": "EMP-1845", "role": "Quantum Cryptography Researcher", "department": "Advanced Research", "bio": "Evaluating post-quantum lattice encryption algorithms and securing internal communications against harvest-now-decrypt-later vectors. Lead on Project KRYPTON."},
+        {"name": "Harrison Wells", "empid": "EMP-8812", "role": "Physical Security Director", "department": "Facilities & Hardware", "bio": "Monitoring badge access control logs, biometric server room locks, and SCADA sensor telemetry across laboratory facilities."},
+        {"name": "Amara Chen", "empid": "EMP-3470", "role": "Incident Response Lead", "department": "SOC Operations", "bio": "Coordinating 24/7 triage teams, analyzing SIEM alert correlations, and conducting forensic timeline reconstruction during engagements. Lead on Project SPECTRE."},
         {"name": "Samantha Vance", "empid": "EMP-9104", "role": "IT Procurement Director", "department": "Infrastructure Finance", "bio": "Managing quarterly cloud hosting budgets, hardware server upgrades, and laboratory vendor compliance audits."}
     ]
     return render_template('team.html', members=members)
