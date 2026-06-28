@@ -12,22 +12,34 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
 endobj
 5 0 obj
-<< /Length 450 >>
+<< /Length 1200 >>
 stream
 BT
-/F1 18 Tf
-50 700 Td
+/F1 16 Tf
+50 720 Td
 (Threat Vector Analysis Report) Tj
-0 -30 Td
-/F1 12 Tf
-(Author: Elena Rostova) Tj
 0 -25 Td
-(Analysis of perimeter external attack vectors.) Tj
-0 -20 Td
-(Recommended action: enforce strict WAF filtering on query parameters.) Tj
-0 -20 Td
+/F1 11 Tf
+(Author: Elena Rostova | Classification: Internal Operations) Tj
+0 -25 Td
+(1. External Attack Surface Assessment:) Tj
+0 -18 Td
+(Recent telemetry indicates automated vulnerability scanners targeting search endpoints.) Tj
+0 -18 Td
+(WAF filters have successfully neutralized naive equality and SQL comment injection attempts.) Tj
+0 -18 Td
+() Tj
+0 -18 Td
+(2. Malware C2 Anomaly Detection:) Tj
+0 -18 Td
+(Offensive security heuristics isolated an unauthorized external command-and-control beacon.) Tj
+0 -18 Td
 (Captured C2 Malware Beacon Signature: rvcectf{m4lw4r3_b34c0n_s1gn4tur3_q3}) Tj
-0 -20 Td
+0 -18 Td
+() Tj
+0 -18 Td
+(Malware Telemetry Dump [Base64]: aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ==) Tj
+0 -18 Td
 ET
 endstream
 endobj
@@ -36,8 +48,8 @@ endobj
   /Title (Threat Vector Analysis Report)
   /Author (Elena Rostova)
   /Subject (Threat Analysis Q3)
-  /Keywords (Captured Telemetry Log: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
-  /Producer (RVCE Cyber Labs Vault System)
+  /Keywords (Malware C2 Mirror: aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1kUXc0dzlXZ1hjUQ==)
+  /Producer (RVCE Cyber Labs Vault System v4.9)
 >>
 endobj
 xref
@@ -48,9 +60,9 @@ xref
 0000000109 00000 n 
 0000000220 00000 n 
 0000000288 00000 n 
-0000000800 00000 n 
+0000001400 00000 n 
 trailer
 << /Size 7 /Root 1 0 R /Info 6 0 R >>
 startxref
-940
+1550
 %%EOF

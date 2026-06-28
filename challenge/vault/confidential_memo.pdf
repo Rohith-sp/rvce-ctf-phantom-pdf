@@ -12,32 +12,32 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
 endobj
 5 0 obj
-<< /Length 450 >>
+<< /Length 1200 >>
 stream
 BT
-/F1 18 Tf
-50 700 Td
+/F1 16 Tf
+50 720 Td
 (CONFIDENTIAL INTERNAL AUDIT MEMO) Tj
-0 -30 Td
-/F1 12 Tf
-(Author: Dr. Arthur Pendelton) Tj
+0 -25 Td
+/F1 11 Tf
+(Author: Dr. Arthur Pendelton | Classification: Internal Operations) Tj
 0 -25 Td
 (Subject: Security Vault Passphrase & Encryption Audit) Tj
-0 -20 Td
+0 -18 Td
 () Tj
-0 -20 Td
+0 -18 Td
 (No glyph upon the canvas speaks my name,) Tj
-0 -20 Td
+0 -18 Td
 (though I have watched this artifact since its beginning.) Tj
-0 -20 Td
+0 -18 Td
 (Beneath its record lies a serpent of digits,) Tj
-0 -20 Td
+0 -18 Td
 (seeking its companion from the maker's mark.) Tj
-0 -20 Td
+0 -18 Td
 (Bind the two in opposition,) Tj
-0 -20 Td
+0 -18 Td
 (and let Caesar's second cousin finish the tale.) Tj
-0 -20 Td
+0 -18 Td
 ET
 endstream
 endobj
@@ -47,7 +47,7 @@ endobj
   /Author (Dr. Arthur Pendelton)
   /Subject (Encrypted Verification Token: 33283e352526213f455905095309272a3e231e35747253045c6d33712976661e28774a0c450d55623c)
   /Keywords (Internal Video Archive: aHR0cHM6Ly95b3V0dS5iZS9aOW9UaG1UVDZqMD9zaT11QS1KbWZIUURjaUg0Y3hN)
-  /Producer (RVCE Cyber Labs Vault System)
+  /Producer (RVCE Cyber Labs Vault System v4.9)
 >>
 endobj
 xref
@@ -58,9 +58,9 @@ xref
 0000000109 00000 n 
 0000000220 00000 n 
 0000000288 00000 n 
-0000000800 00000 n 
+0000001400 00000 n 
 trailer
 << /Size 7 /Root 1 0 R /Info 6 0 R >>
 startxref
-940
+1550
 %%EOF
